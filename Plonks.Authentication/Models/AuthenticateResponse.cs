@@ -16,7 +16,7 @@ namespace Plonks.Auth.Models
 
         public string? AccessToken { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public string? RefreshToken { get; set; }
 
         public string Message { get; set; } = "";
@@ -35,6 +35,17 @@ namespace Plonks.Auth.Models
             PicturePath = user.PicturePath;
             AccessToken = accessToken;
             RefreshToken = refreshToken;
+        }
+
+        public AuthenticateResponse(User user, string accessToken, string refreshToken, string message)
+        {
+            Id = user.Id;
+            Username = user.Username;
+            Email = user.Email;
+            PicturePath = user.PicturePath;
+            AccessToken = accessToken;
+            RefreshToken = refreshToken;
+            Message = message;
         }
     }
 }

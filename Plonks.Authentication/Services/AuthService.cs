@@ -75,9 +75,10 @@ namespace Plonks.Auth.Services
 
         public async Task<AuthenticateResponse> SocialLogin(SocialLoginRequest model)
         {
-            User? user = await EmailExists(model.Email) ? await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(model.Email.ToLower()) && x.SocialAccount.Equals(true)) : new User(model);
+            bool emailExists = await EmailExists(model.Email);
+            User? user = emailExists ? await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(model.Email.ToLower()) && x.SocialAccount.Equals(true)) : new User(model);
 
-            if(user == null)
+            if (user == null)
             {
                 return new AuthenticateResponse("This email is already registered.");
             }
@@ -88,9 +89,13 @@ namespace Plonks.Auth.Services
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
 
+            if (!emailExists)
+            {
+                await _context.Users.AddAsync(user);
+            }
             await _context.SaveChangesAsync();
 
-            return new AuthenticateResponse(user, token, refreshToken);
+            return new AuthenticateResponse(user, token, refreshToken, emailExists ? "signedIn" : "registered");
         }
 
         public async Task<RefreshTokenResponse> RefreshToken(string refreshToken)
@@ -168,18 +173,25 @@ namespace Plonks.Auth.Services
 
         private string CreateAccessToken(User user)
         {
+            string myIssuer = _config["JWT:Issuer"];
+            string myAudience = _config["JWT:Audience"];
+
             List<Claim> authClaims = new List<Claim>
             {
                 new Claim("id", user.Id.ToString()),
                 new Claim("username", user.Username),
                 new Claim("email", user.Email),
-                new Claim("picture", user.PicturePath != null ? user.PicturePath : ""),
+                new Claim("picturePath", user.PicturePath != null ? user.PicturePath : ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Aud, myIssuer),
+            new Claim(JwtRegisteredClaimNames.Iss, myAudience)
             };
 
             SymmetricSecurityKey authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
 
             JwtSecurityToken token = new JwtSecurityToken(
+                issuer: myIssuer,
+                audience: myAudience,
                 expires: DateTime.Now.AddMinutes(15),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

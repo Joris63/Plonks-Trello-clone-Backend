@@ -51,7 +51,7 @@ namespace Plonks.Auth.Controllers
 
                 if (response.AccessToken == null)
                 {
-                    return BadRequest(response.Message);
+                    return Unauthorized();
                 }
 
                 setTokenCookie(response.RefreshToken);
@@ -91,13 +91,13 @@ namespace Plonks.Auth.Controllers
 
         [HttpPost]
         [Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)
         {
             try
             {
-                string refreshToken = Request.Cookies["refreshToken"];
+                //string refreshToken = Request.Cookies["refreshToken"];
 
-                RefreshTokenResponse response = await _service.RefreshToken(refreshToken);
+                RefreshTokenResponse response = await _service.RefreshToken(model.RefreshToken);
 
                 if (response.AccessToken == null)
                 {
@@ -144,9 +144,9 @@ namespace Plonks.Auth.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7),
-                Secure = true,
                 SameSite = SameSiteMode.None,
+                Secure = true,
+                Expires = DateTime.UtcNow.AddDays(7),
             };
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }
