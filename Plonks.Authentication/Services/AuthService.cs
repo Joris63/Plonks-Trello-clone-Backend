@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Plonks.Auth.Entities;
 using Plonks.Auth.Helpers;
 using Plonks.Auth.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Plonks.Auth.Services
 {
@@ -22,12 +18,12 @@ namespace Plonks.Auth.Services
     public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
-        private readonly IConfiguration _config;
+        private readonly IUserMethods _userMethods;
 
-        public AuthService(AppDbContext context, IConfiguration config)
+        public AuthService(AppDbContext context, IUserMethods userMethods)
         {
             _context = context;
-            _config = config;
+            _userMethods = userMethods;
         }
 
         public async Task<AuthenticateResponse> Register(RegisterRequest model)
@@ -37,11 +33,11 @@ namespace Plonks.Auth.Services
                 return new AuthenticateResponse("This email is already registered.");
             }
 
-            CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            _userMethods.CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             User newUser = new User(model.Username, model.Email, passwordHash, passwordSalt);
 
-            string token = CreateAccessToken(newUser);
+            string token = _userMethods.CreateAccessToken(newUser);
             string refreshToken = GenerateRefreshToken();
 
             newUser.RefreshToken = refreshToken;
@@ -57,12 +53,12 @@ namespace Plonks.Auth.Services
         {
             User? retrievedUser = retrievedUser = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(model.Email.ToLower()) && x.SocialAccount.Equals(false));
 
-            if (retrievedUser == null || !VerifyPasswordHash(model.Password, retrievedUser.PasswordHash, retrievedUser.PasswordSalt))
+            if (retrievedUser == null || !_userMethods.VerifyPasswordHash(model.Password, retrievedUser.PasswordHash, retrievedUser.PasswordSalt))
             {
                 return new AuthenticateResponse("Incorrect email or password.");
             }
 
-            string token = CreateAccessToken(retrievedUser);
+            string token = _userMethods.CreateAccessToken(retrievedUser);
             string refreshToken = GenerateRefreshToken();
 
             retrievedUser.RefreshToken = refreshToken;
@@ -83,7 +79,7 @@ namespace Plonks.Auth.Services
                 return new AuthenticateResponse("This email is already registered.");
             }
 
-            string token = CreateAccessToken(user);
+            string token = _userMethods.CreateAccessToken(user);
             string refreshToken = GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
@@ -107,8 +103,8 @@ namespace Plonks.Auth.Services
                 return new RefreshTokenResponse("Invalid refresh token.");
             }
 
-            var newAccessToken = CreateAccessToken(retrievedUser);
-            var newRefreshToken = GenerateRefreshToken();
+            string newAccessToken = _userMethods.CreateAccessToken(retrievedUser);
+            string newRefreshToken = GenerateRefreshToken();
 
             retrievedUser.RefreshToken = newRefreshToken;
             retrievedUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
@@ -136,7 +132,7 @@ namespace Plonks.Auth.Services
         /*
          Helper methods 
         */
-        private async Task<bool> EmailExists(string email)
+        public async Task<bool> EmailExists(string email)
         {
             if (await _context.Users.AnyAsync(x => x.Email.ToLower() == email.ToLower()))
             {
@@ -144,60 +140,6 @@ namespace Plonks.Auth.Services
             }
 
             return false;
-        }
-
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
-        }
-
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != passwordHash[i])
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-
-        private string CreateAccessToken(User user)
-        {
-            string myIssuer = _config["JWT:Issuer"];
-            string myAudience = _config["JWT:Audience"];
-
-            List<Claim> authClaims = new List<Claim>
-            {
-                new Claim("id", user.Id.ToString()),
-                new Claim("username", user.Username),
-                new Claim("email", user.Email),
-                new Claim("picturePath", user.PicturePath != null ? user.PicturePath : ""),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Aud, myIssuer),
-            new Claim(JwtRegisteredClaimNames.Iss, myAudience)
-            };
-
-            SymmetricSecurityKey authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
-
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: myIssuer,
-                audience: myAudience,
-                expires: DateTime.Now.AddMinutes(15),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private static string GenerateRefreshToken()

@@ -1,10 +1,8 @@
 ﻿using Plonks.Auth.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text.Json.Serialization;
 
 namespace Plonks.Auth.Models
 {
-    public class AuthenticateResponse
+    public class EditUserResponse
     {
         public Guid Id { get; set; }
 
@@ -14,22 +12,19 @@ namespace Plonks.Auth.Models
 
         public string? PicturePath { get; set; }
 
-        public bool? SocialLogin { get; set; }
+        public bool SocialLogin { get; set; }
 
         public string? AccessToken { get; set; }
-
-        //[JsonIgnore]
-        public string? RefreshToken { get; set; }
 
         public string Message { get; set; } = "";
 
 
-        public AuthenticateResponse(string message)
+        public EditUserResponse(string message)
         {
             Message = message;
         }
 
-        public AuthenticateResponse(User user, string accessToken, string refreshToken)
+        public EditUserResponse(User user, string accessToken)
         {
             Id = user.Id;
             Username = user.Username;
@@ -37,10 +32,8 @@ namespace Plonks.Auth.Models
             PicturePath = user.PicturePath;
             SocialLogin = user.SocialAccount;
             AccessToken = accessToken;
-            RefreshToken = refreshToken;
         }
-
-        public AuthenticateResponse(User user, string accessToken, string refreshToken, string message)
+        public EditUserResponse(User user, string accessToken, string message)
         {
             Id = user.Id;
             Username = user.Username;
@@ -48,7 +41,6 @@ namespace Plonks.Auth.Models
             PicturePath = user.PicturePath;
             SocialLogin = user.SocialAccount;
             AccessToken = accessToken;
-            RefreshToken = refreshToken;
             Message = message;
         }
     }

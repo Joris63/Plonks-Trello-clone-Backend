@@ -141,7 +141,7 @@ namespace Plonks.Auth.Controllers
         private void setTokenCookie(string token)
         {
             // append cookie with refresh token to the http response
-            var cookieOptions = new CookieOptions
+            CookieOptions cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 SameSite = SameSiteMode.None,

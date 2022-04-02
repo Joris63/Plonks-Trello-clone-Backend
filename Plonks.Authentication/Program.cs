@@ -22,7 +22,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddScoped<IUserMethods, UserMethods>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
