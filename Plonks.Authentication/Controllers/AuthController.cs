@@ -25,7 +25,7 @@ namespace Plonks.Auth.Controllers
             {
                 AuthenticateResponse response = await _service.Register(model);
 
-                if(response.AccessToken == null)
+                if (response.AccessToken == null)
                 {
                     return BadRequest(response.Message);
                 }
@@ -91,13 +91,18 @@ namespace Plonks.Auth.Controllers
 
         [HttpPost]
         [Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)
+        public async Task<IActionResult> RefreshToken()
         {
             try
             {
-                //string refreshToken = Request.Cookies["refreshToken"];
+                string refreshToken = Request.Cookies["refreshToken"];
 
-                RefreshTokenResponse response = await _service.RefreshToken(model.RefreshToken);
+                if (refreshToken == null)
+                {
+                    return BadRequest("Invalid token.");
+                }
+
+                RefreshTokenResponse response = await _service.RefreshToken(refreshToken);
 
                 if (response.AccessToken == null)
                 {
@@ -124,7 +129,7 @@ namespace Plonks.Auth.Controllers
             {
                 bool result = await _service.RevokeToken(model);
 
-                if(!result)
+                if (!result)
                 {
                     return BadRequest("Something wen wrong.");
                 }
