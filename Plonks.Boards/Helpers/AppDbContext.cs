@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Plonks.Auth.Entities;
+using Plonks.Boards.Entities;
 
-namespace Plonks.Auth.Helpers
+namespace Plonks.Boards.Helpers
 {
     public class AppDbContext : DbContext
     {
@@ -14,6 +14,6 @@ namespace Plonks.Auth.Helpers
 
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Board> Boards { get; set; }
     }
 }
