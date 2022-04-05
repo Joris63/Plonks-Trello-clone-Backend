@@ -15,8 +15,15 @@ namespace Plonks.Boards.Entities
 
         public Guid OwnerId { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public ICollection<BoardUsers>? Members { get; set; }
 
-        public ICollection<List> Lists { get; set; }
+        public Board(string title, string color, Guid ownerId)
+        {
+            Id = Guid.NewGuid();
+            Title = title;
+            Color = color;
+            LastUpdated = DateTime.Now;
+            OwnerId = ownerId;
+        }
     }
 }

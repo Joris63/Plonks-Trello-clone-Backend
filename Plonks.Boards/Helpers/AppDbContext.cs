@@ -11,9 +11,16 @@ namespace Plonks.Boards.Helpers
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BoardUsers>()
+                .HasKey(b => new { b.UserId });
+            modelBuilder.Entity<BoardUsers>()
+                .HasOne(b => b.Board)
+                .WithMany(b => b.Members)
+                .HasForeignKey(uf => uf.BoardId);
 
         }
 
         public DbSet<Board> Boards { get; set; }
+        public DbSet<BoardUsers> BoardUsers { get; set; }
     }
 }
