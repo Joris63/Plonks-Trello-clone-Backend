@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Auth.Models;
 using Plonks.Auth.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Auth.Controllers
 {
@@ -11,10 +13,12 @@ namespace Plonks.Auth.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _service;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public AuthController(IAuthService service)
+        public AuthController(IAuthService service, IPublishEndpoint publishEndpoint)
         {
             _service = service;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [HttpPost]
@@ -29,6 +33,8 @@ namespace Plonks.Auth.Controllers
                 {
                     return BadRequest(response.Message);
                 }
+
+                await publishEndpoint.Publish<SharedUser>(new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email,  PicturePath = response.PicturePath });
 
                 setTokenCookie(response.RefreshToken);
 
@@ -76,6 +82,11 @@ namespace Plonks.Auth.Controllers
                 if (response.AccessToken == null)
                 {
                     return BadRequest(response.Message);
+                }
+
+                if(response.Message == "registered")
+                {
+                    await publishEndpoint.Publish<SharedUser>(new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath });
                 }
 
                 setTokenCookie(response.RefreshToken);

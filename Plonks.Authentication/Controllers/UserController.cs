@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Auth.Models;
 using Plonks.Auth.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Auth.Controllers
 {
@@ -11,10 +12,12 @@ namespace Plonks.Auth.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, IPublishEndpoint publishEndpoint)
         {
             _service = service;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [Authorize]
@@ -30,6 +33,8 @@ namespace Plonks.Auth.Controllers
                 {
                     return BadRequest(response.Message);
                 }
+
+                await publishEndpoint.Publish<SharedUser>(new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath });
 
                 return Ok(response);
             }

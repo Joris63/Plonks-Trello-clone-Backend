@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +25,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<IBoardService, BoardService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
@@ -51,6 +53,24 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddControllers();
+
+builder.Services.AddMassTransit(config =>
+{
+    config.AddConsumer<UserConsumer>();
+
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host("amqp://guest:guest@localhost:5672");
+
+        cfg.ReceiveEndpoint("user-queue", c =>
+        {
+            c.ConfigureConsumer<UserConsumer>(ctx);
+        });
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
