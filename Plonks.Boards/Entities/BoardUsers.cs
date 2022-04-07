@@ -15,16 +15,8 @@ namespace Plonks.Boards.Entities
 
         public User User { get; set; }
 
+        public bool isOwner { get; set; } = false;
 
-        public BoardUsers()
-        {
-
-        }
-
-        public BoardUsers(Guid boardId, Guid userID)
-        {
-            BoardId = boardId;
-            UserId = userID;
-        }
+        public bool Favorited { get; set; } = false;
     }
 }

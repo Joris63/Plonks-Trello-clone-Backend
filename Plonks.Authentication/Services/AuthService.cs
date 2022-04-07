@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Plonks.Auth.Entities;
 using Plonks.Auth.Helpers;
 using Plonks.Auth.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Plonks.Auth.Services
 {
@@ -18,12 +22,12 @@ namespace Plonks.Auth.Services
     public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
-        private readonly IUserMethods _userMethods;
+        private readonly IConfiguration _config;
 
-        public AuthService(AppDbContext context, IUserMethods userMethods)
+        public AuthService(AppDbContext context, IConfiguration config)
         {
             _context = context;
-            _userMethods = userMethods;
+            _config = config;
         }
 
         public async Task<AuthenticateResponse> Register(RegisterRequest model)
@@ -33,11 +37,11 @@ namespace Plonks.Auth.Services
                 return new AuthenticateResponse("This email is already registered.");
             }
 
-            _userMethods.CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            PasswordHelper.CreatePasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             User newUser = new User(model.Username, model.Email, passwordHash, passwordSalt);
 
-            string token = _userMethods.CreateAccessToken(newUser);
+            string token = CreateAccessToken(newUser);
             string refreshToken = GenerateRefreshToken();
 
             newUser.RefreshToken = refreshToken;
@@ -53,12 +57,12 @@ namespace Plonks.Auth.Services
         {
             User? retrievedUser = retrievedUser = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower().Equals(model.Email.ToLower()) && x.SocialAccount.Equals(false));
 
-            if (retrievedUser == null || !_userMethods.VerifyPasswordHash(model.Password, retrievedUser.PasswordHash, retrievedUser.PasswordSalt))
+            if (retrievedUser == null || !PasswordHelper.VerifyPasswordHash(model.Password, retrievedUser.PasswordHash, retrievedUser.PasswordSalt))
             {
                 return new AuthenticateResponse("Incorrect email or password.");
             }
 
-            string token = _userMethods.CreateAccessToken(retrievedUser);
+            string token = CreateAccessToken(retrievedUser);
             string refreshToken = GenerateRefreshToken();
 
             retrievedUser.RefreshToken = refreshToken;
@@ -79,7 +83,7 @@ namespace Plonks.Auth.Services
                 return new AuthenticateResponse("This email is already registered.");
             }
 
-            string token = _userMethods.CreateAccessToken(user);
+            string token = CreateAccessToken(user);
             string refreshToken = GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
@@ -103,7 +107,7 @@ namespace Plonks.Auth.Services
                 return new RefreshTokenResponse("Invalid refresh token.");
             }
 
-            string newAccessToken = _userMethods.CreateAccessToken(retrievedUser);
+            string newAccessToken = CreateAccessToken(retrievedUser);
             string newRefreshToken = GenerateRefreshToken();
 
             retrievedUser.RefreshToken = newRefreshToken;
@@ -149,6 +153,37 @@ namespace Plonks.Auth.Services
             rng.GetBytes(randomNumber);
 
             return Convert.ToBase64String(randomNumber);
+        }
+
+
+        private string CreateAccessToken(User user)
+        {
+            string myIssuer = _config["JWT:Issuer"];
+            string myAudience = _config["JWT:Audience"];
+
+            List<Claim> authClaims = new List<Claim>
+            {
+                new Claim("id", user.Id.ToString()),
+                new Claim("username", user.Username),
+                new Claim("email", user.Email),
+                new Claim("picturePath", user.PicturePath != null ? user.PicturePath : ""),
+                new Claim("socialLogin", user.SocialAccount.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Aud, myIssuer),
+                new Claim(JwtRegisteredClaimNames.Iss, myAudience)
+            };
+
+            SymmetricSecurityKey authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
+
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: myIssuer,
+                audience: myAudience,
+                expires: DateTime.Now.AddMinutes(15),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

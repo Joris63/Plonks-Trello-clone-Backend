@@ -29,7 +29,7 @@ namespace Plonks.Auth.Controllers
             {
                 EditUserResponse response = await _service.Edit(model);
 
-                if(response.AccessToken == null)
+                if(response.Id == null)
                 {
                     return BadRequest(response.Message);
                 }
@@ -54,7 +54,7 @@ namespace Plonks.Auth.Controllers
             {
                 EditUserResponse response = await _service.ChangePassword(model);
 
-                if (response.AccessToken == null)
+                if (response.Id == null)
                 {
                     return BadRequest(response.Message);
                 }

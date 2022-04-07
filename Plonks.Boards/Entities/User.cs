@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Plonks.Boards.Entities
 {
@@ -13,6 +14,6 @@ namespace Plonks.Boards.Entities
 
         public string? PicturePath { get; set; }
 
-        public ICollection<BoardUsers>? Boards { get; set; }
+        public List<Board>? Boards { get; set; } = new List<Board>();
     }
 }

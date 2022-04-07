@@ -14,8 +14,6 @@ namespace Plonks.Auth.Models
 
         public bool SocialLogin { get; set; }
 
-        public string? AccessToken { get; set; }
-
         public string Message { get; set; } = "";
 
 
@@ -24,23 +22,21 @@ namespace Plonks.Auth.Models
             Message = message;
         }
 
-        public EditUserResponse(User user, string accessToken)
+        public EditUserResponse(User user)
         {
             Id = user.Id;
             Username = user.Username;
             Email = user.Email;
             PicturePath = user.PicturePath;
             SocialLogin = user.SocialAccount;
-            AccessToken = accessToken;
         }
-        public EditUserResponse(User user, string accessToken, string message)
+        public EditUserResponse(User user, string message)
         {
             Id = user.Id;
             Username = user.Username;
             Email = user.Email;
             PicturePath = user.PicturePath;
             SocialLogin = user.SocialAccount;
-            AccessToken = accessToken;
             Message = message;
         }
     }

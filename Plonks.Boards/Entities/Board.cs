@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Plonks.Boards.Entities
 {
@@ -15,15 +16,20 @@ namespace Plonks.Boards.Entities
 
         public Guid OwnerId { get; set; }
 
-        public ICollection<BoardUsers>? Members { get; set; }
+        public List<User>? Members { get; set; } = new List<User>();
 
-        public Board(string title, string color, Guid ownerId)
+        public Board()
+        {
+
+        }
+
+        public Board(string title, string color, Guid ownerID)
         {
             Id = Guid.NewGuid();
             Title = title;
             Color = color;
             LastUpdated = DateTime.Now;
-            OwnerId = ownerId;
+            OwnerId = ownerID;
         }
     }
 }

@@ -2,7 +2,6 @@
 using Plonks.Auth.Entities;
 using Plonks.Auth.Helpers;
 using Plonks.Auth.Models;
-
 namespace Plonks.Auth.Services
 {
     public interface IUserService
@@ -14,12 +13,10 @@ namespace Plonks.Auth.Services
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
-        private readonly IUserMethods _userMethods;
 
-        public UserService(AppDbContext context, IUserMethods userMethods)
+        public UserService(AppDbContext context)
         {
             _context = context;
-            _userMethods = userMethods;
         }
 
         public async Task<EditUserResponse> Edit(EditUserRequest model)
@@ -56,11 +53,9 @@ namespace Plonks.Auth.Services
                 message = "Profile updated.";
             }
 
-            string token = _userMethods.CreateAccessToken(retrievedUser);
-
             await _context.SaveChangesAsync();
 
-            return new EditUserResponse(retrievedUser, token, message);
+            return new EditUserResponse(retrievedUser, message);
         }
 
         public async Task<EditUserResponse> ChangePassword(ChangePasswordRequest model)
@@ -73,23 +68,22 @@ namespace Plonks.Auth.Services
                 return new EditUserResponse(message);
             }
 
-            if (!_userMethods.VerifyPasswordHash(model.OldPassword, retrievedUser.PasswordHash, retrievedUser.PasswordSalt))
+            if (!PasswordHelper.VerifyPasswordHash(model.OldPassword, retrievedUser.PasswordHash, retrievedUser.PasswordSalt))
             {
                 message = "Incorrect password.";
                 return new EditUserResponse(message);
             }
 
-            _userMethods.CreatePasswordHash(model.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            PasswordHelper.CreatePasswordHash(model.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
 
             retrievedUser.PasswordHash = passwordHash;
             retrievedUser.PasswordSalt = passwordSalt;
 
-            string token = _userMethods.CreateAccessToken(retrievedUser);
             await _context.SaveChangesAsync();
 
             message = "Password updated.";
 
-            return new EditUserResponse(retrievedUser, token, message);
+            return new EditUserResponse(retrievedUser, message);
         }
 
 
