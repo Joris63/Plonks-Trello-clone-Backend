@@ -25,7 +25,7 @@ namespace Plonks.Boards.Controllers
         {
             try
             {
-                BoardResponse<Board> response = await _service.AddBoard(model);
+                BoardResponse<Guid> response = await _service.AddBoard(model);
                 
                 if(response.Data == null)
                 {

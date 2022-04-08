@@ -7,7 +7,7 @@ namespace Plonks.Boards.Services
 {
     public interface IBoardService
     {
-        Task<BoardResponse<Board>> AddBoard(AddBoardRequest model);
+        Task<BoardResponse<Guid>> AddBoard(AddBoardRequest model);
         Task<BoardResponse<List<BoardDTO>>> GetAllUserBoards(Guid userId);
     }
 
@@ -21,13 +21,13 @@ namespace Plonks.Boards.Services
             _context = context;
         }
 
-        public async Task<BoardResponse<Board>> AddBoard(AddBoardRequest model)
+        public async Task<BoardResponse<Guid>> AddBoard(AddBoardRequest model)
         {
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id.Equals(model.UserId));
 
             if (user == null)
             {
-                return new BoardResponse<Board>() { Message = "No user found." };
+                return new BoardResponse<Guid>() { Message = "No user found." };
             }
 
             Board board = new Board(model.Title, model.Color, model.UserId);
@@ -37,7 +37,7 @@ namespace Plonks.Boards.Services
             await _context.Boards.AddAsync(board);
             await _context.SaveChangesAsync();
 
-            return new BoardResponse<Board>() { Data = board, Message = "Board added." };
+            return new BoardResponse<Guid>() { Data = board.Id, Message = "Board added." };
         }
 
         public async Task<BoardResponse<List<BoardDTO>>> GetAllUserBoards(Guid userId)
