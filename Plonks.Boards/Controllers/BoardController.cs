@@ -18,7 +18,7 @@ namespace Plonks.Boards.Controllers
             _service = service;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [Route("add")]
         public async Task<IActionResult> AddBoard([FromBody] AddBoardRequest model)
@@ -41,8 +41,8 @@ namespace Plonks.Boards.Controllers
             }
         }
 
-        //[Authorize]
-        [HttpGet("{userId}")]
+        [Authorize]
+        [HttpGet("all/{userId}")]
         public async Task<IActionResult> GetAllUserBoards(Guid userId)
         {
             try
