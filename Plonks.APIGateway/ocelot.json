@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/auth/register",
+      "DownstreamPathTemplate": "/api/auth/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,11 +9,10 @@
           "Port": 5011
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/register",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamPathTemplate": "/api/auth/{everything}",
     },
     {
-      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamPathTemplate": "/api/user/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -21,71 +20,10 @@
           "Port": 5011
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/login",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamPathTemplate": "/api/user/{everything}",
     },
     {
-      "DownstreamPathTemplate": "/api/auth/social-login",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5011
-        }
-      ],
-      "UpstreamPathTemplate": "/api/auth/social-login",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/auth/refresh-token",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5011
-        }
-      ],
-      "UpstreamPathTemplate": "/api/auth/refresh-token",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/auth/revoke-token",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5011
-        }
-      ],
-      "UpstreamPathTemplate": "/api/auth/revoke-token",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/user/edit",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5011
-        }
-      ],
-      "UpstreamPathTemplate": "/api/user/edit",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/user/edit-password",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5011
-        }
-      ],
-      "UpstreamPathTemplate": "/api/user/edit-password",
-      "UpstreamHttpMethod": [ "Post" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/board/add",
+      "DownstreamPathTemplate": "/api/board/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -93,21 +31,8 @@
           "Port": 5021
         }
       ],
-      "UpstreamPathTemplate": "/api/board/add",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamPathTemplate": "/api/board/{everything}",
     },
-    {
-      "DownstreamPathTemplate": "/api/board/all/{everything}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5021
-        }
-      ],
-      "UpstreamPathTemplate": "/api/board/all/{everything}",
-      "UpstreamHttpMethod": [ "Get" ]
-    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001"
