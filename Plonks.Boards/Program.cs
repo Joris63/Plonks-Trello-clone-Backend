@@ -54,8 +54,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddControllers();
-
 builder.Services.AddMassTransit(config =>
 {
     config.AddConsumer<UserConsumer>();
@@ -96,11 +94,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseCors(x => x
-        .SetIsOriginAllowed(origin => true)
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials());
+app.UseCors("cors");
 
 app.UseAuthentication();
 

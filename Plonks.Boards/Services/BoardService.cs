@@ -9,6 +9,8 @@ namespace Plonks.Boards.Services
     {
         Task<BoardResponse<Guid>> AddBoard(AddBoardRequest model);
         Task<BoardResponse<List<BoardDTO>>> GetAllUserBoards(Guid userId);
+        Task<BoardResponse<BoardDTO>> GetBoard(GetBoardRequest model);
+        Task<BoardResponse<Guid>> FavoriteBoard(FavoriteBoardRequest model);
     }
 
     public class BoardService : IBoardService
@@ -31,10 +33,10 @@ namespace Plonks.Boards.Services
             }
 
             Board board = new Board(model.Title, model.Color, model.UserId);
-
-            user.Boards.Add(board);
+            BoardUsers boardUsers = new BoardUsers() { BoardId = board.Id, UserId = model.UserId, isOwner = true, Favorited = false };
 
             await _context.Boards.AddAsync(board);
+            await _context.BoardUsers.AddAsync(boardUsers);
             await _context.SaveChangesAsync();
 
             return new BoardResponse<Guid>() { Data = board.Id, Message = "Board added." };
@@ -66,6 +68,41 @@ namespace Plonks.Boards.Services
             }
 
             return new BoardResponse<List<BoardDTO>>() { Data = boards };
+        }
+
+        public async Task<BoardResponse<BoardDTO>> GetBoard(GetBoardRequest model)
+        {
+            BoardUsers boardUser = await _context.BoardUsers.Include(bu => bu.Board).ThenInclude(b => b.Members).FirstOrDefaultAsync((bu) => bu.UserId.Equals(model.UserId) && bu.BoardId.Equals(model.BoardId));
+
+            if (boardUser == null)
+            {
+                return new BoardResponse<BoardDTO>() { Message = "No board found." };
+            }
+
+            List<UserDTO> boardMembers = new List<UserDTO>();
+
+            foreach (User user in boardUser.Board.Members)
+            {
+                boardMembers.Add(new UserDTO(user, boardUser.Board.OwnerId.Equals(user.Id)));
+            }
+
+            return new BoardResponse<BoardDTO>() { Data = new BoardDTO(boardUser.Board, boardUser.Favorited, boardMembers) };
+        }
+
+        public async Task<BoardResponse<Guid>> FavoriteBoard(FavoriteBoardRequest model)
+        {
+            BoardUsers boardUsers = await _context.BoardUsers.FirstOrDefaultAsync(bu => bu.UserId.Equals(model.UserId) && bu.BoardId.Equals(model.BoardId));
+
+            if (boardUsers == null)
+            {
+                return new BoardResponse<Guid>() { Message = "No user found." };
+            }
+
+            boardUsers.Favorited = model.Favorite;
+
+            await _context.SaveChangesAsync();
+
+            return new BoardResponse<Guid>() { Data = boardUsers.BoardId, Message = "Board added." };
         }
     }
 }

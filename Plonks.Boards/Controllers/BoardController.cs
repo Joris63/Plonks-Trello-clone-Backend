@@ -62,5 +62,50 @@ namespace Plonks.Boards.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetBoard([FromBody] GetBoardRequest model)
+        {
+            try
+            {
+                BoardResponse<BoardDTO> response = await _service.GetBoard(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("favorite")]
+        public async Task<IActionResult> FavoriteBoard([FromBody] FavoriteBoardRequest model)
+        {
+            try
+            {
+                BoardResponse<Guid> response = await _service.FavoriteBoard(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Data);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

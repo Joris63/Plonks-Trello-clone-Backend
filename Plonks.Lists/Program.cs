@@ -2,8 +2,8 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Plonks.Auth.Helpers;
-using Plonks.Auth.Services;
+using Plonks.Boards.Helpers;
+using Plonks.Lists.Helpers;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,9 +22,6 @@ builder.Services.AddCors(options =>
         .AllowCredentials();
     });
 });
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
@@ -55,9 +52,22 @@ builder.Services.AddControllers();
 
 builder.Services.AddMassTransit(config =>
 {
+    config.AddConsumer<UserConsumer>();
+    config.AddConsumer<CardConsumer>();
+
     config.UsingRabbitMq((ctx, cfg) =>
     {
         cfg.Host("amqp://guest:guest@localhost:5672");
+
+        cfg.ReceiveEndpoint("user-queue", c =>
+        {
+            c.ConfigureConsumer<UserConsumer>(ctx);
+        });
+
+        cfg.ReceiveEndpoint("card-queue", c =>
+        {
+            c.ConfigureConsumer<CardConsumer>(ctx);
+        });
     });
 });
 
@@ -92,9 +102,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers().RequireCors("cors");
-});
+app.MapControllers();
 
 app.Run();
