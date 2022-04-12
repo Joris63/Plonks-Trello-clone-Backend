@@ -10,7 +10,7 @@ namespace Plonks.Lists.Services
         Task SaveCard(SharedCard card);
     }
 
-    public class CardService
+    public class CardService : ICardService
     {
         private readonly AppDbContext _context;
 

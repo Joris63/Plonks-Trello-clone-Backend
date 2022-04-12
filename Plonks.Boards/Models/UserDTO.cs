@@ -25,7 +25,6 @@ namespace Plonks.Boards.Models
             Username = user.Username;
             Email = user.Email;
             PicturePath = user.PicturePath;
-            this.isOwner = isOwner;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Plonks.Lists.Helpers
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // card - user relation
             modelBuilder.Entity<Card>()
                 .HasMany(x => x.Users)
                 .WithMany(x => x.Cards)
@@ -19,6 +20,12 @@ namespace Plonks.Lists.Helpers
                     .WithMany().HasForeignKey(x => x.UserId),
                     x => x.HasOne(x => x.Card)
                    .WithMany().HasForeignKey(x => x.CardId));
+
+            // card - list relation
+            modelBuilder.Entity<Card>()
+                .HasOne(x => x.List)
+                .WithMany(x => x.Cards)
+                .HasForeignKey(x => x.ListId);
         }
 
         public DbSet<BoardList> Lists { get; set; }

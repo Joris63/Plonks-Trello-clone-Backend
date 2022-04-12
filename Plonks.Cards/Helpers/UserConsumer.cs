@@ -1,8 +1,8 @@
 ﻿using MassTransit;
-using Plonks.Lists.Services;
+using Plonks.Cards.Services;
 using Plonks.Shared.Entities;
 
-namespace Plonks.Lists.Helpers
+namespace Plonks.Cards.Helpers
 {
     public class UserConsumer : IConsumer<SharedUser>
     {

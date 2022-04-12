@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Plonks.Lists.Entities;
-using Plonks.Lists.Helpers;
+using Plonks.Cards.Entities;
+using Plonks.Cards.Helpers;
 using Plonks.Shared.Entities;
 
-namespace Plonks.Lists.Services
+namespace Plonks.Cards.Services
 {
     public interface IUserService
     {
         Task SaveUser(SharedUser user);
     }
-
+         
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;

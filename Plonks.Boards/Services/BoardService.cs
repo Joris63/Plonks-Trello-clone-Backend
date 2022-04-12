@@ -33,7 +33,7 @@ namespace Plonks.Boards.Services
             }
 
             Board board = new Board(model.Title, model.Color, model.UserId);
-            BoardUsers boardUsers = new BoardUsers() { BoardId = board.Id, UserId = model.UserId, isOwner = true, Favorited = false };
+            BoardUsers boardUsers = new BoardUsers() { BoardId = board.Id, UserId = model.UserId, Favorited = false };
 
             await _context.Boards.AddAsync(board);
             await _context.BoardUsers.AddAsync(boardUsers);

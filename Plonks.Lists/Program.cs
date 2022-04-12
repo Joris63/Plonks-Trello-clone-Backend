@@ -2,8 +2,8 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Plonks.Boards.Helpers;
 using Plonks.Lists.Helpers;
+using Plonks.Lists.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +22,9 @@ builder.Services.AddCors(options =>
         .AllowCredentials();
     });
 });
+
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
