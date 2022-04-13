@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Lists.Models;
+using Plonks.Lists.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Lists.Controllers
 {
@@ -8,13 +11,29 @@ namespace Plonks.Lists.Controllers
     [ApiController]
     public class ListController : ControllerBase
     {
+        private readonly IListService _service;
+        private readonly IPublishEndpoint publishEndpoint;
+
+        public ListController(IListService service, IPublishEndpoint publishEndpoint)
+        {
+            _service = service;
+            this.publishEndpoint = publishEndpoint;
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddList([FromBody] AddListRequest model)
         {
             try
             {
-                return Ok();
+                BoardListResponse<Guid> response = await _service.AddList(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -25,11 +44,18 @@ namespace Plonks.Lists.Controllers
 
         [Authorize]
         [HttpGet("all/{boardId}")]
-        public async Task<IActionResult> GetAllListsByBoardId (Guid boardId)
+        public async Task<IActionResult> GetAllListsByBoardId(Guid boardId)
         {
             try
             {
-                return Ok();
+                BoardListResponse<List<BoardListDTO>> response = await _service.GetAllListsByBoardId(boardId);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Data);
             }
             catch (Exception ex)
             {
@@ -45,7 +71,14 @@ namespace Plonks.Lists.Controllers
         {
             try
             {
-                return Ok();
+                BoardListResponse<Guid> response = await _service.EditList(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -62,23 +95,14 @@ namespace Plonks.Lists.Controllers
         {
             try
             {
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return StatusCode(500, "Internal server error");
-            }
-        }
+                BoardListResponse<Guid> response = await _service.ArchiveList(model);
 
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
 
-        [Authorize]
-        [HttpDelete("{listId}")]
-        public async Task<IActionResult> DeleteList(Guid listId)
-        {
-            try
-            {
-                return Ok();
+                return Ok(response);
             }
             catch (Exception ex)
             {

@@ -12,10 +12,12 @@ namespace Plonks.Boards.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IBoardService _service;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public BoardController(IBoardService service)
+        public BoardController(IBoardService service, IPublishEndpoint publishEndpoint)
         {
             _service = service;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [Authorize]

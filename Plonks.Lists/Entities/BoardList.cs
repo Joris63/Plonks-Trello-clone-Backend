@@ -11,8 +11,19 @@ namespace Plonks.Lists.Entities
 
         public Guid BoardId { get; set; }
 
+        public Board? Board { get; set; }
+
         public bool Archived { get; set; }
 
         public List<Card> Cards { get; set; } = new List<Card>();
+
+
+        public BoardList(string title, Guid boardId)
+        {
+            Id = Guid.NewGuid();
+            Title = title;
+            BoardId = boardId;
+            Archived = false;
+        }
     }
 }

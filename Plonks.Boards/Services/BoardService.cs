@@ -29,7 +29,7 @@ namespace Plonks.Boards.Services
 
             if (user == null)
             {
-                return new BoardResponse<Guid>() { Message = "No user found." };
+                return new BoardResponse<Guid>() { Message = "User was not found." };
             }
 
             Board board = new Board(model.Title, model.Color, model.UserId);
@@ -76,7 +76,7 @@ namespace Plonks.Boards.Services
 
             if (boardUser == null)
             {
-                return new BoardResponse<BoardDTO>() { Message = "No board found." };
+                return new BoardResponse<BoardDTO>() { Message = "Board was not found." };
             }
 
             List<UserDTO> boardMembers = new List<UserDTO>();
@@ -95,14 +95,14 @@ namespace Plonks.Boards.Services
 
             if (boardUsers == null)
             {
-                return new BoardResponse<Guid>() { Message = "No user found." };
+                return new BoardResponse<Guid>() { Message = "User was not found." };
             }
 
             boardUsers.Favorited = model.Favorite;
 
             await _context.SaveChangesAsync();
 
-            return new BoardResponse<Guid>() { Data = boardUsers.BoardId, Message = "Board added." };
+            return new BoardResponse<Guid>() { Data = boardUsers.BoardId, Message = boardUsers.Favorited ? "Board favorited." : "Board unfavorited." };
         }
     }
 }

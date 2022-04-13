@@ -21,6 +21,12 @@ namespace Plonks.Lists.Helpers
                     x => x.HasOne(x => x.Card)
                    .WithMany().HasForeignKey(x => x.CardId));
 
+            // board - list relation
+            modelBuilder.Entity<BoardList>()
+                .HasOne(x => x.Board)
+                .WithMany(x => x.Lists)
+                .HasForeignKey(x => x.BoardId);
+
             // card - list relation
             modelBuilder.Entity<Card>()
                 .HasOne(x => x.List)
@@ -28,6 +34,7 @@ namespace Plonks.Lists.Helpers
                 .HasForeignKey(x => x.ListId);
         }
 
+        public DbSet<Board> Boards { get; set; }
         public DbSet<BoardList> Lists { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<User> Users { get; set; }
