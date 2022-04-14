@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Boards.Entities;
 using Plonks.Boards.Models;
 using Plonks.Boards.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Boards.Controllers
 {
@@ -33,6 +35,8 @@ namespace Plonks.Boards.Controllers
                 {
                     return BadRequest(response.Message);
                 }
+
+                await publishEndpoint.Publish<SharedBoard>(new SharedBoard { Id = response.Data });
 
                 return Ok(response);
             }

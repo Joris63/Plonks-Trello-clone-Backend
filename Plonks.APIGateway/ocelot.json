@@ -9,7 +9,7 @@
           "Port": 5011
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/{everything}",
+      "UpstreamPathTemplate": "/api/auth/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/user/{everything}",
@@ -20,7 +20,7 @@
           "Port": 5011
         }
       ],
-      "UpstreamPathTemplate": "/api/user/{everything}",
+      "UpstreamPathTemplate": "/api/user/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/board/{everything}",
@@ -31,8 +31,30 @@
           "Port": 5021
         }
       ],
-      "UpstreamPathTemplate": "/api/board/{everything}",
+      "UpstreamPathTemplate": "/api/board/{everything}"
     },
+    {
+      "DownstreamPathTemplate": "/api/list/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/api/list/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/card/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5041
+        }
+      ],
+      "UpstreamPathTemplate": "/api/card/{everything}"
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001"

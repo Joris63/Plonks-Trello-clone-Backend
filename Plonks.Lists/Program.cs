@@ -23,6 +23,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddScoped<IBoardService, BoardService>();
 builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -56,6 +57,7 @@ builder.Services.AddControllers();
 builder.Services.AddMassTransit(config =>
 {
     config.AddConsumer<UserConsumer>();
+    config.AddConsumer<BoardConsumer>();
     config.AddConsumer<CardConsumer>();
 
     config.UsingRabbitMq((ctx, cfg) =>
@@ -65,6 +67,11 @@ builder.Services.AddMassTransit(config =>
         cfg.ReceiveEndpoint("user-queue", c =>
         {
             c.ConfigureConsumer<UserConsumer>(ctx);
+        });
+
+        cfg.ReceiveEndpoint("board-queue", c =>
+        {
+            c.ConfigureConsumer<BoardConsumer>(ctx);
         });
 
         cfg.ReceiveEndpoint("card-queue", c =>
