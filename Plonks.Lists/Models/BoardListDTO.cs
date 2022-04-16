@@ -8,6 +8,8 @@
 
         public Guid BoardId { get; set; }
 
+        public int Order { get; set; }
+
         public List<CardDTO> Cards { get; set; } = new List<CardDTO>();
     }
 }

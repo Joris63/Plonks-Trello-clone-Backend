@@ -8,6 +8,8 @@
 
         public Guid ListId { get; set; }
 
+        public int Order { get; set; }
+
         public bool HasDescription { get; set; }
 
         public int? CommentAmount { get; set; }

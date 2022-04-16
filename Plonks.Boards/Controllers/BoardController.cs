@@ -71,6 +71,7 @@ namespace Plonks.Boards.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("get")]
         public async Task<IActionResult> GetBoard([FromBody] GetBoardRequest model)
         {
             try

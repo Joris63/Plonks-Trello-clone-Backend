@@ -13,6 +13,8 @@ namespace Plonks.Lists.Entities
 
         public BoardList? List { get; set; }
 
+        public int Order { get; set; }
+
         public bool HasDescription { get; set; }
 
         public int? CommentAmount { get; set; }

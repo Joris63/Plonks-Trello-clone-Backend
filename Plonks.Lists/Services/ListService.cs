@@ -10,6 +10,7 @@ namespace Plonks.Lists.Services
         Task<BoardListResponse<Guid>> AddList(AddListRequest model);
         Task<BoardListResponse<List<BoardListDTO>>> GetAllListsByBoardId(Guid boardId);
         Task<BoardListResponse<Guid>> EditList(EditListRequest model);
+        Task<BoardListResponse<bool>> ReorderLists(ReorderListsRequest model);
         Task<BoardListResponse<Guid>> ArchiveList(ArchiveListRequest model);
     }
 
@@ -31,7 +32,9 @@ namespace Plonks.Lists.Services
                 return new BoardListResponse<Guid>() { Message = "Board was not found." };
             }
 
-            BoardList list = new BoardList(model.Title, model.BoardId);
+            List<BoardList> result = await _context.Lists.Where(list => list.BoardId.Equals(model.BoardId) && !list.Archived).ToListAsync();
+
+            BoardList list = new BoardList(model.Title, model.BoardId, result.Count);
 
             await _context.Lists.AddAsync(list);
             await _context.SaveChangesAsync();
@@ -48,7 +51,7 @@ namespace Plonks.Lists.Services
                 return new BoardListResponse<List<BoardListDTO>>() { Message = "Board was not found." };
             }
 
-            List<BoardList> result = await _context.Lists.Include(list => list.Cards).Where(list => list.BoardId.Equals(boardId)).ToListAsync();
+            List<BoardList> result = await _context.Lists.OrderBy(list => list.Order).Include(list => list.Cards).Where(list => list.BoardId.Equals(boardId) && !list.Archived).ToListAsync();
 
             List<BoardListDTO> lists = new List<BoardListDTO>();
 
@@ -90,6 +93,7 @@ namespace Plonks.Lists.Services
                     Id = list.Id,
                     Title = list.Title,
                     BoardId = list.BoardId,
+                    Order = list.Order,
                     Cards = cards,
                 });
             }
@@ -111,6 +115,26 @@ namespace Plonks.Lists.Services
             await _context.SaveChangesAsync();
 
             return new BoardListResponse<Guid> { Data = list.Id, Message = "List updated." };
+        }
+        public async Task<BoardListResponse<bool>> ReorderLists(ReorderListsRequest model)
+        {
+            List<BoardList> lists = await _context.Lists.Where(list => list.BoardId.Equals(model.BoardId) && !list.Archived).ToListAsync();
+
+            foreach(BoardList list in lists)
+            {
+                int newOrder = model.Lists.Find((l) => l.Id == list.Id).Order;
+
+                if(newOrder < 0 || String.IsNullOrEmpty(newOrder.ToString()))
+                {
+                    return new BoardListResponse<bool> { Data = false, Message = "All lists require a correct order." };
+                }
+
+                list.Order = newOrder;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new BoardListResponse<bool> { Data = true, Message = "List order saved." };
         }
 
         public async Task<BoardListResponse<Guid>> ArchiveList(ArchiveListRequest model)

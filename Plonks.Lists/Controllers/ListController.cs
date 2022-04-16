@@ -22,13 +22,14 @@ namespace Plonks.Lists.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> AddList([FromBody] AddListRequest model)
         {
             try
             {
                 BoardListResponse<Guid> response = await _service.AddList(model);
 
-                if (response.Data == null)
+                if (response.Data == Guid.Empty)
                 {
                     return BadRequest(response.Message);
                 }
@@ -79,6 +80,29 @@ namespace Plonks.Lists.Controllers
                 }
 
                 return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("reorder")]
+        public async Task<IActionResult> ReorderLists([FromBody] ReorderListsRequest model)
+        {
+            try
+            {
+                BoardListResponse<bool> response = await _service.ReorderLists(model);
+
+                if (!response.Data)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Message);
             }
             catch (Exception ex)
             {

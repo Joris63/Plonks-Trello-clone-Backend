@@ -13,6 +13,8 @@ namespace Plonks.Cards.Entities
 
         public string? Content { get; set; }
 
+        public int Order { get; set; }
+
         public bool Complete { get; set; }
     }
 }

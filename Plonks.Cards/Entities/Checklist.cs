@@ -9,6 +9,8 @@ namespace Plonks.Cards.Entities
 
         public string? Title { get; set; }
 
+        public int Order { get; set; }
+
         public Guid CardId { get; set; }
 
         public Card? Card { get; set; }
