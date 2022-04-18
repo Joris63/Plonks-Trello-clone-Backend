@@ -15,6 +15,8 @@ namespace Plonks.Lists.Entities
 
         public int Order { get; set; }
 
+        public bool Archived { get; set; }
+
         public bool HasDescription { get; set; }
 
         public int? CommentAmount { get; set; }

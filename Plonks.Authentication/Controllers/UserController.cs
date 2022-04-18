@@ -34,7 +34,11 @@ namespace Plonks.Auth.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<SharedUser>(new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath });
+                await publishEndpoint.Publish<QueueMessage<SharedUser>>(new QueueMessage<SharedUser>
+                {
+                    Data = new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath },
+                    Type = QueueMessageType.Update
+                });
 
                 return Ok(response);
             }

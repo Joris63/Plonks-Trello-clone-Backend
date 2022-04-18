@@ -16,7 +16,9 @@ namespace Plonks.Shared.Entities
 
         public int Order { get; set; }
 
-        public bool HasDescription { get; set; }
+        public bool Archived { get; set; } = false;
+
+        public bool HasDescription { get; set; } = false;
 
         public int? CommentAmount { get; set; }
 

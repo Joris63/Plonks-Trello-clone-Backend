@@ -4,7 +4,7 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Lists.Helpers
 {
-    public class CardConsumer : IConsumer<SharedCard>
+    public class CardConsumer : IConsumer<QueueMessage<SharedCard>>
     {
         private readonly ICardService _service;
 
@@ -12,11 +12,20 @@ namespace Plonks.Lists.Helpers
         {
             _service = service;
         }
-        public async Task Consume(ConsumeContext<SharedCard> context)
+        public async Task Consume(ConsumeContext<QueueMessage<SharedCard>> context)
         {
             try
             {
-                await _service.SaveCard(context.Message);
+                switch (context.Message.Type)
+                {
+                    case QueueMessageType.Insert:
+                        await _service.CreateCard(context.Message.Data);
+                        break;
+
+                    case QueueMessageType.Update:
+                        await _service.UpdateCard(context.Message.Data);
+                        break;
+                }
             }
             catch (Exception ex)
             {

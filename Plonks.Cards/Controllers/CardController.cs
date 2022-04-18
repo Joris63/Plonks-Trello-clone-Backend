@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Plonks.Cards.Entities;
 using Plonks.Cards.Models;
+using Plonks.Cards.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Cards.Controllers
 {
@@ -8,6 +12,15 @@ namespace Plonks.Cards.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
+        private readonly ICardService _service;
+        private readonly IPublishEndpoint publishEndpoint;
+
+        public CardController(ICardService service, IPublishEndpoint publishEndpoint)
+        {
+            _service = service;
+            this.publishEndpoint = publishEndpoint;
+        }
+
         [Authorize]
         [HttpPost]
         [Route("add")]
@@ -15,7 +28,22 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<Card> response = await _service.AddCard(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<SharedCard>(new SharedCard { 
+                    Id = response.Data.Id, 
+                    Title = response.Data.Title, 
+                    ListId = response.Data.ListId, 
+                    Order = response.Data.Order, 
+                    CreatedAt = response.Data.CreatedAt,
+                });
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

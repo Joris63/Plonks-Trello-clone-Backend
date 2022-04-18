@@ -7,7 +7,8 @@ namespace Plonks.Lists.Services
 {
     public interface IBoardService
     {
-        Task SaveBoard(SharedBoard board);
+        Task CreateBoard(SharedBoard board);
+        Task DeleteBoard(SharedBoard board);
     }
 
     public class BoardService : IBoardService
@@ -19,7 +20,7 @@ namespace Plonks.Lists.Services
             _context = context;
         }
 
-        public async Task SaveBoard(SharedBoard board)
+        public async Task CreateBoard(SharedBoard board)
         {
             if(board == null)
             {
@@ -33,6 +34,16 @@ namespace Plonks.Lists.Services
 
             await _context.Boards.AddAsync(newBoard);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteBoard(SharedBoard board)
+        {
+            if (board == null)
+            {
+                return;
+            }
+
+            // Delete board and all its content
         }
     }
 }

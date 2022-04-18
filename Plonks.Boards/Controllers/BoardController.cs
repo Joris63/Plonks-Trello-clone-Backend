@@ -36,7 +36,11 @@ namespace Plonks.Boards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<SharedBoard>(new SharedBoard { Id = response.Data });
+                await publishEndpoint.Publish<QueueMessage<SharedBoard>>(new QueueMessage<SharedBoard>
+                {
+                    Data = new SharedBoard { Id = response.Data },
+                    Type = QueueMessageType.Insert
+                });
 
                 return Ok(response);
             }

@@ -34,6 +34,12 @@ namespace Plonks.Lists.Controllers
                     return BadRequest(response.Message);
                 }
 
+                await publishEndpoint.Publish<QueueMessage<SharedBoardList>>(new QueueMessage<SharedBoardList>
+                {
+                    Data = new SharedBoardList { Id = response.Data },
+                    Type = QueueMessageType.Insert
+                });
+
                 return Ok(response);
             }
             catch (Exception ex)
