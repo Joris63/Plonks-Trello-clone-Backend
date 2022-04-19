@@ -27,16 +27,16 @@ namespace Plonks.Lists.Controllers
         {
             try
             {
-                BoardListResponse<Guid> response = await _service.AddList(model);
+                BoardListResponse<BoardListDTO> response = await _service.AddList(model);
 
-                if (response.Data == Guid.Empty)
+                if (response.Data == null)
                 {
                     return BadRequest(response.Message);
                 }
 
                 await publishEndpoint.Publish<QueueMessage<SharedBoardList>>(new QueueMessage<SharedBoardList>
                 {
-                    Data = new SharedBoardList { Id = response.Data },
+                    Data = new SharedBoardList { Id = response.Data.Id, Title = response.Data.Title },
                     Type = QueueMessageType.Insert
                 });
 
@@ -78,12 +78,19 @@ namespace Plonks.Lists.Controllers
         {
             try
             {
-                BoardListResponse<Guid> response = await _service.EditList(model);
+                BoardListResponse<BoardListDTO> response = await _service.EditList(model);
 
                 if (response.Data == null)
                 {
                     return BadRequest(response.Message);
                 }
+
+                await publishEndpoint.Publish<QueueMessage<SharedBoardList>>(new QueueMessage<SharedBoardList>
+                {
+                    Data = new SharedBoardList { Id = response.Data.Id, Title = response.Data.Title },
+                    Type = QueueMessageType.Update
+                });
+
 
                 return Ok(response);
             }

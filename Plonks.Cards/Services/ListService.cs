@@ -7,7 +7,8 @@ namespace Plonks.Cards.Services
 {
     public interface IListService
     {
-        Task SaveList(SharedBoardList user);
+        Task CreateList(SharedBoardList list);
+        Task UpdateList(SharedBoardList list);
     }
 
     public class ListService : IListService
@@ -19,7 +20,24 @@ namespace Plonks.Cards.Services
             _context = context;
         }
 
-        public async Task SaveList(SharedBoardList list)
+        public async Task CreateList(SharedBoardList list)
+        {
+            if (list == null)
+            {
+                return;
+            }
+
+            BoardList newList = new BoardList()
+            {
+                Id = list.Id,
+                Title = list.Title,
+            };
+
+            await _context.Lists.AddAsync(newList);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateList(SharedBoardList list)
         {
             if (list == null)
             {
@@ -28,23 +46,9 @@ namespace Plonks.Cards.Services
 
             BoardList? retrievedList = await _context.Lists.FirstOrDefaultAsync(u => u.Id.Equals(list.Id));
 
-            if (retrievedList != null)
-            {
-                retrievedList.Title = list.Title;
+            retrievedList.Title = list.Title;
 
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                BoardList newList = new BoardList()
-                {
-                    Id = list.Id,
-                    Title = list.Title,
-                };
-
-                await _context.Lists.AddAsync(newList);
-                await _context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -23,13 +23,13 @@ namespace Plonks.Lists.Services
             _context = context;
         }
 
-        public async Task<BoardListResponse<Guid>> AddList(AddListRequest model)
+        public async Task<BoardListResponse<BoardListDTO>> AddList(AddListRequest model)
         {
             bool boardExists = await _context.Boards.AnyAsync((board) => board.Id.Equals(model.BoardId));
 
             if (!boardExists)
             {
-                return new BoardListResponse<Guid>() { Message = "Board was not found." };
+                return new BoardListResponse<BoardListDTO>() { Message = "Board was not found." };
             }
 
             List<BoardList> result = await _context.Lists.Where(list => list.BoardId.Equals(model.BoardId) && !list.Archived).ToListAsync();
@@ -39,7 +39,9 @@ namespace Plonks.Lists.Services
             await _context.Lists.AddAsync(list);
             await _context.SaveChangesAsync();
 
-            return new BoardListResponse<Guid>() { Data = list.Id, Message = "List added." };
+            BoardListDTO response = new BoardListDTO() { Id = list.Id, Title = list.Title, BoardId = list.BoardId, Order = list.Order };
+
+            return new BoardListResponse<BoardListDTO>() { Data = response, Message = "List added." };
         }
 
         public async Task<BoardListResponse<List<BoardListDTO>>> GetAllListsByBoardId(Guid boardId)
@@ -101,20 +103,22 @@ namespace Plonks.Lists.Services
             return new BoardListResponse<List<BoardListDTO>>() { Data = lists };
         }
 
-        public async Task<BoardListResponse<Guid>> EditList(EditListRequest model)
+        public async Task<BoardListResponse<BoardListDTO>> EditList(EditListRequest model)
         {
             BoardList? list = await _context.Lists.FirstOrDefaultAsync(list => list.Id.Equals(model.Id));
 
             if (list == null)
             {
-                return new BoardListResponse<Guid> { Message = "No list was found." };
+                return new BoardListResponse<BoardListDTO> { Message = "No list was found." };
             }
 
             list.Title = model.Title;
 
             await _context.SaveChangesAsync();
 
-            return new BoardListResponse<Guid> { Data = list.Id, Message = "List updated." };
+            BoardListDTO response = new BoardListDTO() { Id = list.Id, Title = list.Title, BoardId = list.BoardId, Order = list.Order };
+
+            return new BoardListResponse<BoardListDTO> { Data = response, Message = "List updated." };
         }
         public async Task<BoardListResponse<bool>> ReorderLists(ReorderListsRequest model)
         {

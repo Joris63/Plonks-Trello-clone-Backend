@@ -28,7 +28,7 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                CardResponse<Card> response = await _service.AddCard(model);
+                CardResponse<CardDTO> response = await _service.AddCard(model);
 
                 if (response.Data == null)
                 {
@@ -58,7 +58,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<CardDTO> response = await _service.GetCard(cardId);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Data);
             }
             catch (Exception ex)
             {
@@ -74,7 +81,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<CardDTO> response = await _service.EditCard(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Data);
             }
             catch (Exception ex)
             {
@@ -91,7 +105,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<bool> response = await _service.ReorderCards(model);
+
+                if (!response.Data)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Message);
             }
             catch (Exception ex)
             {
@@ -108,7 +129,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<Guid> response = await _service.ArchiveCard(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
