@@ -31,7 +31,7 @@ namespace Plonks.Lists.Services
 
             foreach (var user in card.Users)
             {
-                cardUsers.Add(UserConverter.SharedUserToUser(user));
+                cardUsers.Add(DTOConverter.SharedUserToUser(user));
             }
 
             Card newCard = new Card()
@@ -71,7 +71,7 @@ namespace Plonks.Lists.Services
 
             foreach (var user in card.Users)
             {
-                cardUsers.Add(UserConverter.SharedUserToUser(user));
+                cardUsers.Add(DTOConverter.SharedUserToUser(user));
             }
 
             retrievedCard.Title = card.Title;

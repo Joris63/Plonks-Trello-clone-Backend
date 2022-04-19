@@ -131,7 +131,7 @@ namespace Plonks.Cards.Controllers
             {
                 CardResponse<Guid> response = await _service.ArchiveCard(model);
 
-                if (response.Data == null)
+                if (response.Data == Guid.Empty)
                 {
                     return BadRequest(response.Message);
                 }

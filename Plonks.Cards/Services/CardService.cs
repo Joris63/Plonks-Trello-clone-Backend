@@ -127,7 +127,7 @@ namespace Plonks.Cards.Services
 
             await _context.SaveChangesAsync();
 
-            return new CardResponse<Guid> { Data = card.Id, Message = model.Archived ? "List archived." : "List sent back to the board." };
+            return new CardResponse<Guid> { Data = card.Id, Message = model.Archived ? "Card archived." : "Card sent back to the board." };
         }
     }
 }

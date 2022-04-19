@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Cards.Models;
+using Plonks.Cards.Services;
 
 namespace Plonks.Cards.Controllers
 {
@@ -8,6 +9,13 @@ namespace Plonks.Cards.Controllers
     [ApiController]
     public class ChecklistController : ControllerBase
     {
+        private readonly IChecklistService _service;
+
+        public ChecklistController(IChecklistService service)
+        {
+            _service = service;
+        }
+
         [Authorize]
         [HttpPost]
         [Route("add")]

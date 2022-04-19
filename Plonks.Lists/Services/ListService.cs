@@ -7,9 +7,9 @@ namespace Plonks.Lists.Services
 {
     public interface IListService
     {
-        Task<BoardListResponse<Guid>> AddList(AddListRequest model);
+        Task<BoardListResponse<BoardListDTO>> AddList(AddListRequest model);
         Task<BoardListResponse<List<BoardListDTO>>> GetAllListsByBoardId(Guid boardId);
-        Task<BoardListResponse<Guid>> EditList(EditListRequest model);
+        Task<BoardListResponse<BoardListDTO>> EditList(EditListRequest model);
         Task<BoardListResponse<bool>> ReorderLists(ReorderListsRequest model);
         Task<BoardListResponse<Guid>> ArchiveList(ArchiveListRequest model);
     }
@@ -55,50 +55,7 @@ namespace Plonks.Lists.Services
 
             List<BoardList> result = await _context.Lists.OrderBy(list => list.Order).Include(list => list.Cards).Where(list => list.BoardId.Equals(boardId) && !list.Archived).ToListAsync();
 
-            List<BoardListDTO> lists = new List<BoardListDTO>();
-
-            foreach (BoardList list in result)
-            {
-                List<CardDTO> cards = new List<CardDTO>();
-
-                foreach (Card card in list.Cards)
-                {
-                    List<UserDTO> users = new List<UserDTO>();
-
-                    foreach (User user in card.Users)
-                    {
-                        users.Add(new UserDTO()
-                        {
-                            Id = user.Id,
-                            Username = user.Username,
-                            Email = user.Email,
-                            PicturePath = user.PicturePath,
-                        });
-                    }
-
-                    cards.Add(new CardDTO()
-                    {
-                        Id = card.Id,
-                        Title = card.Title,
-                        ListId = card.ListId,
-                        HasDescription = card.HasDescription,
-                        CommentAmount = card.CommentAmount,
-                        ChecklistItems = card.ChecklistItems,
-                        CompletedChecklistItems = card.CompletedChecklistItems,
-                        CreatedAt = card.CreatedAt,
-                        Users = users,
-                    });
-                }
-
-                lists.Add(new BoardListDTO()
-                {
-                    Id = list.Id,
-                    Title = list.Title,
-                    BoardId = list.BoardId,
-                    Order = list.Order,
-                    Cards = cards,
-                });
-            }
+            List<BoardListDTO> lists = DTOConverter.MapBoardListsToDTO(result);
 
             return new BoardListResponse<List<BoardListDTO>>() { Data = lists };
         }

@@ -134,7 +134,7 @@ namespace Plonks.Lists.Controllers
             {
                 BoardListResponse<Guid> response = await _service.ArchiveList(model);
 
-                if (response.Data == null)
+                if (response.Data == Guid.Empty)
                 {
                     return BadRequest(response.Message);
                 }
