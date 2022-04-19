@@ -35,12 +35,17 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<SharedCard>(new SharedCard { 
-                    Id = response.Data.Id, 
-                    Title = response.Data.Title, 
-                    ListId = response.Data.ListId, 
-                    Order = response.Data.Order, 
-                    CreatedAt = response.Data.CreatedAt,
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = response.Data.Id,
+                        Title = response.Data.Title,
+                        ListId = response.Data.ListId,
+                        Order = response.Data.Order,
+                        CreatedAt = response.Data.CreatedAt,
+                    },
+                    Type = QueueMessageType.Insert
                 });
 
                 return Ok(response);

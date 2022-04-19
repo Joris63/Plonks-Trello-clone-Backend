@@ -31,7 +31,13 @@ namespace Plonks.Lists.Services
 
             foreach (var user in card.Users)
             {
-                cardUsers.Add(DTOConverter.SharedUserToUser(user));
+                cardUsers.Add(new User()
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    Email = user.Email,
+                    PicturePath = user.PicturePath,
+                });
             }
 
             Card newCard = new Card()
@@ -62,7 +68,7 @@ namespace Plonks.Lists.Services
 
             Card? retrievedCard = await _context.Cards.FirstOrDefaultAsync(u => u.Id.Equals(card.Id));
 
-            if(retrievedCard == null)
+            if (retrievedCard == null)
             {
                 return;
             }
@@ -71,7 +77,13 @@ namespace Plonks.Lists.Services
 
             foreach (var user in card.Users)
             {
-                cardUsers.Add(DTOConverter.SharedUserToUser(user));
+                cardUsers.Add(new User()
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    Email = user.Email,
+                    PicturePath = user.PicturePath,
+                });
             }
 
             retrievedCard.Title = card.Title;
