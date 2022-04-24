@@ -15,11 +15,13 @@ namespace Plonks.Boards.Controllers
     {
         private readonly IBoardService _service;
         private readonly IPublishEndpoint publishEndpoint;
+        private readonly ILogger<BoardController> _logger;
 
-        public BoardController(IBoardService service, IPublishEndpoint publishEndpoint)
+        public BoardController(IBoardService service, IPublishEndpoint publishEndpoint, ILogger<BoardController> logger)
         {
             _service = service;
             this.publishEndpoint = publishEndpoint;
+            _logger = logger;
         }
 
         [Authorize]
@@ -29,6 +31,8 @@ namespace Plonks.Boards.Controllers
         {
             try
             {
+                _logger.LogInformation("Adding new board {Board}", model);
+
                 BoardResponse<Guid> response = await _service.AddBoard(model);
                 
                 if(response.Data == null)
@@ -57,6 +61,8 @@ namespace Plonks.Boards.Controllers
         {
             try
             {
+                _logger.LogInformation("Getting all boards by userId {UserId}", userId);
+
                 BoardResponse<List<BoardDTO>> response = await _service.GetAllUserBoards(userId);
 
                 if(response.Data == null)
@@ -80,6 +86,8 @@ namespace Plonks.Boards.Controllers
         {
             try
             {
+                _logger.LogInformation("Getting board {Board}", model);
+
                 BoardResponse<BoardDTO> response = await _service.GetBoard(model);
 
                 if (response.Data == null)
@@ -103,6 +111,8 @@ namespace Plonks.Boards.Controllers
         {
             try
             {
+                _logger.LogInformation("Favoriting board {Board}", model);
+
                 BoardResponse<Guid> response = await _service.FavoriteBoard(model);
 
                 if (response.Data == null)

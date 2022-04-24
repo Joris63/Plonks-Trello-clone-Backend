@@ -5,8 +5,24 @@ using Microsoft.IdentityModel.Tokens;
 using Plonks.Boards.Helpers;
 using Plonks.Boards.Services;
 using System.Text;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+
+Log.Information("Starting Plonks.Boards Microservice");
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, logConfig) =>
+{
+    logConfig.WriteTo.Console()
+        .ReadFrom.Configuration(ctx.Configuration)
+        .Enrich.WithEnvironmentName()
+        .Enrich.WithMachineName()
+        .Enrich.WithProperty("Version", 1);
+});
 
 ConfigurationManager configuration = builder.Configuration;
 

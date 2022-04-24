@@ -53,7 +53,7 @@ namespace Plonks.Lists.Services
                 return new BoardListResponse<List<BoardListDTO>>() { Message = "Board was not found." };
             }
 
-            List<BoardList> result = await _context.Lists.OrderBy(list => list.Order).Include(list => list.Cards).Where(list => list.BoardId.Equals(boardId) && !list.Archived).ToListAsync();
+            List<BoardList> result = await _context.Lists.OrderBy(list => list.Order).Include(list => list.Cards.OrderBy(card => card.Order)).Where(list => list.BoardId.Equals(boardId) && !list.Archived).ToListAsync();
 
             List<BoardListDTO> lists = DTOConverter.MapBoardListsToDTO(result);
 
@@ -81,11 +81,11 @@ namespace Plonks.Lists.Services
         {
             List<BoardList> lists = await _context.Lists.Where(list => list.BoardId.Equals(model.BoardId) && !list.Archived).ToListAsync();
 
-            foreach(BoardList list in lists)
+            foreach (BoardList list in lists)
             {
                 int newOrder = model.Lists.Find((l) => l.Id == list.Id).Order;
 
-                if(newOrder < 0 || String.IsNullOrEmpty(newOrder.ToString()))
+                if (newOrder < 0 || String.IsNullOrEmpty(newOrder.ToString()))
                 {
                     return new BoardListResponse<bool> { Data = false, Message = "All lists require a correct order." };
                 }
