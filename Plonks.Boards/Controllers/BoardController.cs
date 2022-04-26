@@ -35,7 +35,7 @@ namespace Plonks.Boards.Controllers
 
                 BoardResponse<Guid> response = await _service.AddBoard(model);
                 
-                if(response.Data == null)
+                if(response.Data == Guid.Empty)
                 {
                     return BadRequest(response.Message);
                 }

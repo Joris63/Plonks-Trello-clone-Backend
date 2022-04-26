@@ -63,12 +63,12 @@ builder.Services.AddMassTransit(config =>
     {
         cfg.Host("amqp://guest:guest@localhost:5672");
 
-        cfg.ReceiveEndpoint("user-queue", c =>
+        cfg.ReceiveEndpoint("card.user", c =>
         {
             c.ConfigureConsumer<UserConsumer>(ctx);
         });
 
-        cfg.ReceiveEndpoint("list-queue", c =>
+        cfg.ReceiveEndpoint("card.list", c =>
         {
             c.ConfigureConsumer<ListConsumer>(ctx);
         });
