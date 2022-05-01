@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Cards.Models;
+using Plonks.Cards.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Cards.Controllers
 {
@@ -8,6 +11,15 @@ namespace Plonks.Cards.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        private readonly ICommentService _service;
+        private readonly IPublishEndpoint publishEndpoint;
+
+        public CommentController(ICommentService service, IPublishEndpoint publishEndpoint)
+        {
+            _service = service;
+            this.publishEndpoint = publishEndpoint;
+        }
+
         [Authorize]
         [HttpPost]
         [Route("add")]
@@ -15,7 +27,24 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                AddCommentResponse response = await _service.AddComment(model);
+
+                if (response.Comment == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = response.Comment.Id,
+                        CommentAmount = response.CommentCount
+                    },
+                    Type = QueueMessageType.Update
+                });
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -31,7 +60,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<CommentDTO> response = await _service.EditComment(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -47,7 +83,24 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                DeleteCommentResponse response = await _service.DeleteComment(model);
+
+                if (response.CardId == Guid.Empty)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = response.CardId,
+                        CommentAmount = response.CommentCount
+                    },
+                    Type = QueueMessageType.Update
+                });
+
+                return Ok(response.Message);
             }
             catch (Exception ex)
             {

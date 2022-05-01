@@ -46,11 +46,11 @@ namespace Plonks.Lists.Services
                 Title = card.Title,
                 ListId = card.ListId,
                 Order = card.Order,
-                Archived = card.Archived,
-                HasDescription = card.HasDescription,
-                CommentAmount = card.CommentAmount,
-                ChecklistItems = card.ChecklistItems,
-                CompletedChecklistItems = card.CompletedChecklistItems,
+                Archived = false,
+                HasDescription = false,
+                CommentAmount = 0,
+                ChecklistItems = 0,
+                CompletedChecklistItems = 0,
                 CreatedAt = card.CreatedAt,
                 Users = cardUsers,
             };
@@ -86,15 +86,43 @@ namespace Plonks.Lists.Services
                 });
             }
 
-            retrievedCard.Title = card.Title;
-            retrievedCard.ListId = card.ListId;
-            retrievedCard.Order = card.Order;
+            if(card.Title != null)
+            {
+                retrievedCard.Title = card.Title;
+            }
+
+            if (card.ListId != Guid.Empty)
+            {
+                retrievedCard.ListId = card.ListId;
+            }
+
+            if (card.Order != -1)
+            {
+                retrievedCard.Order = card.Order;
+            }
+
+            if (card.CommentAmount != -1)
+            {
+                retrievedCard.CommentAmount = card.CommentAmount;
+            }
+
+            if (card.ChecklistItems != -1)
+            {
+                retrievedCard.ChecklistItems = card.ChecklistItems;
+            }
+
+            if (card.CompletedChecklistItems != -1)
+            {
+                retrievedCard.CompletedChecklistItems = card.CompletedChecklistItems;
+            }
+
+            if (card.Users != null)
+            {
+                retrievedCard.Users = cardUsers;
+            }
+
             retrievedCard.Archived = card.Archived;
             retrievedCard.HasDescription = card.HasDescription;
-            retrievedCard.CommentAmount = card.CommentAmount;
-            retrievedCard.ChecklistItems = card.ChecklistItems;
-            retrievedCard.CompletedChecklistItems = card.CompletedChecklistItems;
-            retrievedCard.Users = cardUsers;
 
             await _context.SaveChangesAsync();
         }

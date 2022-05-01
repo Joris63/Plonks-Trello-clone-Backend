@@ -93,6 +93,17 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = model.Id,
+                        Title = response.Data.Title,
+                        HasDescription = response.Data.Description != null || response.Data.Title != String.Empty,
+                    },
+                    Type = QueueMessageType.Update
+                });
+
                 return Ok(response.Data);
             }
             catch (Exception ex)

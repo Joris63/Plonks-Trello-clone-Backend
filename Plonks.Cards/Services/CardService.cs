@@ -120,7 +120,7 @@ namespace Plonks.Cards.Services
 
             if (card == null)
             {
-                return new CardResponse<Guid> { Message = "No card was found." };
+                return new CardResponse<Guid> { Message = "Card was not found." };
             }
 
             card.Archived = model.Archived;

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plonks.Cards.Models;
 using Plonks.Cards.Services;
+using Plonks.Shared.Entities;
 
 namespace Plonks.Cards.Controllers
 {
@@ -10,10 +12,12 @@ namespace Plonks.Cards.Controllers
     public class ChecklistController : ControllerBase
     {
         private readonly IChecklistService _service;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public ChecklistController(IChecklistService service)
+        public ChecklistController(IChecklistService service, IPublishEndpoint publishEndpoint)
         {
             _service = service;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [Authorize]
@@ -23,7 +27,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<ChecklistDTO> response = await _service.AddChecklist(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -39,7 +50,24 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                AddChecklistItemResponse response = await _service.AddChecklistItem(model);
+
+                if (response.ChecklistItem == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = response.ChecklistItem.Id,
+                        ChecklistItems = response.ChecklistItemsCount,
+                    },
+                    Type = QueueMessageType.Update
+                });
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -51,11 +79,18 @@ namespace Plonks.Cards.Controllers
         [Authorize]
         [HttpPost]
         [Route("edit")]
-        public async Task<IActionResult> EditChecklistItem([FromBody] EditChecklistRequest model)
+        public async Task<IActionResult> EditChecklist([FromBody] EditChecklistRequest model)
         {
             try
             {
-                return Ok();
+                CardResponse<ChecklistDTO> response = await _service.EditChecklist(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -71,7 +106,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<ChecklistItemDTO> response = await _service.EditChecklistItem(model);
+
+                if (response.Data == null)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -80,15 +122,31 @@ namespace Plonks.Cards.Controllers
             }
         }
 
-
         [Authorize]
         [HttpPost]
-        [Route("reorder")]
-        public async Task<IActionResult> ReorderChecklist([FromBody] ReorderChecklistRequest model)
+        [Route("complete-item")]
+        public async Task<IActionResult> CompleteChecklistItem([FromBody] CompleteChecklistItemRequest model)
         {
             try
             {
-                return Ok();
+                CardResponse<int> response = await _service.CompleteChecklistItem(model);
+
+                if (response.Data == -1)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = model.Id,
+                        CompletedChecklistItems = response.Data,
+                    },
+                    Type = QueueMessageType.Update
+                });
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -104,7 +162,14 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<bool> response = await _service.ReorderChecklistItems(model);
+
+                if (!response.Data)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                return Ok(response.Message);
             }
             catch (Exception ex)
             {
@@ -121,7 +186,25 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                CardResponse<Guid> response = await _service.DeleteChecklist(model);
+
+                if (response.Data == Guid.Empty)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = response.Data,
+                        ChecklistItems = 0,
+                        CompletedChecklistItems = 0,
+                    },
+                    Type = QueueMessageType.Update
+                });
+
+                return Ok(response.Message);
             }
             catch (Exception ex)
             {
@@ -137,7 +220,25 @@ namespace Plonks.Cards.Controllers
         {
             try
             {
-                return Ok();
+                DeleteChecklistItemResponse response = await _service.DeleteChecklistItem(model);
+
+                if (response.CompletedChecklistItems != -1 && response.ChecklistItems == -1)
+                {
+                    return BadRequest(response.Message);
+                }
+
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = model.Id,
+                        ChecklistItems = response.ChecklistItems,
+                        CompletedChecklistItems = response.CompletedChecklistItems,
+                    },
+                    Type = QueueMessageType.Update
+                });
+
+                return Ok(response.Message);
             }
             catch (Exception ex)
             {

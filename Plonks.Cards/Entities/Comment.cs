@@ -18,5 +18,20 @@ namespace Plonks.Cards.Entities
         public Card? Card { get; set; }
 
         public DateTime SentAt { get; set; }
+
+
+        public Comment()
+        {
+
+        }
+
+        public Comment(string message, Guid senderId, Guid cardId)
+        {
+            Id = Guid.NewGuid();
+            Message = message;
+            SenderId = senderId;
+            CardId = cardId;
+            SentAt = DateTime.UtcNow;
+        }
     }
 }

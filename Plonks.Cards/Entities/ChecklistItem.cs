@@ -16,5 +16,20 @@ namespace Plonks.Cards.Entities
         public int Order { get; set; }
 
         public bool Complete { get; set; }
+
+
+        public ChecklistItem()
+        {
+
+        }
+
+        public ChecklistItem(string content, int order, Guid checklistId)
+        {
+            Id = Guid.NewGuid();
+            Content = content;
+            Order = order;
+            ChecklistId = checklistId;
+            Complete = false;
+        }
     }
 }
