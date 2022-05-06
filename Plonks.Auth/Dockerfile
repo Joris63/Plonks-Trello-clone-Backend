@@ -7,7 +7,8 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Plonks.Auth/Plonks.Auth.csproj", "Plonks.Auth/"]
+COPY ["Plonks.Shared/Plonks.Shared.csproj", "Plonks.Shared.csproj"]
+COPY ["Plonks.Auth/Plonks.Auth.csproj", "Plonks.Auth/Plonks.Auth.csproj"]
 RUN dotnet restore "Plonks.Auth/Plonks.Auth.csproj"
 COPY . .
 WORKDIR "/src/Plonks.Auth"
