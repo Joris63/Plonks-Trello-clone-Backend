@@ -34,6 +34,17 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
+                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                {
+                    Data = new SharedCard()
+                    {
+                        Id = model.CardId,
+                        CompletedChecklistItems = 0,
+                        ChecklistItems = 0,
+                    },
+                    Type = QueueMessageType.Update
+                });
+
                 return Ok(response);
             }
             catch (Exception ex)
@@ -198,8 +209,8 @@ namespace Plonks.Cards.Controllers
                     Data = new SharedCard()
                     {
                         Id = response.Data,
-                        ChecklistItems = 0,
-                        CompletedChecklistItems = 0,
+                        ChecklistItems = null,
+                        CompletedChecklistItems = null,
                     },
                     Type = QueueMessageType.Update
                 });

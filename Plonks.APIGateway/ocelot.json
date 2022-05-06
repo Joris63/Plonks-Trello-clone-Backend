@@ -54,6 +54,28 @@
         }
       ],
       "UpstreamPathTemplate": "/api/card/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/checklist/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5041
+        }
+      ],
+      "UpstreamPathTemplate": "/api/checklist/{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/comment/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5041
+        }
+      ],
+      "UpstreamPathTemplate": "/api/comment/{everything}"
     }
   ],
   "GlobalConfiguration": {

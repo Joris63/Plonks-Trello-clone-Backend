@@ -48,9 +48,9 @@ namespace Plonks.Lists.Services
                 Order = card.Order,
                 Archived = false,
                 HasDescription = false,
-                CommentAmount = 0,
-                ChecklistItems = 0,
-                CompletedChecklistItems = 0,
+                CommentAmount = null,
+                ChecklistItems = null,
+                CompletedChecklistItems = null,
                 CreatedAt = card.CreatedAt,
                 Users = cardUsers,
             };
@@ -75,15 +75,18 @@ namespace Plonks.Lists.Services
 
             List<User> cardUsers = new List<User>();
 
-            foreach (var user in card.Users)
+            if(card.Users != null)
             {
-                cardUsers.Add(new User()
+                foreach (var user in card.Users)
                 {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Email = user.Email,
-                    PicturePath = user.PicturePath,
-                });
+                    cardUsers.Add(new User()
+                    {
+                        Id = user.Id,
+                        Username = user.Username,
+                        Email = user.Email,
+                        PicturePath = user.PicturePath,
+                    });
+                }
             }
 
             if(card.Title != null)

@@ -46,7 +46,12 @@ namespace Plonks.Cards.Services
 
         public async Task<CardResponse<CardDTO>> GetCard(Guid cardId)
         {
-            Card card = await _context.Cards.FirstOrDefaultAsync((card) => card.Id.Equals(cardId));
+            Card? card = await _context.Cards
+                .Include(card => card.Checklists)
+                .ThenInclude(checklist => checklist.Items)
+                .Include(card => card.Users)
+                .Include(card => card.Comments)
+                .FirstOrDefaultAsync((card) => card.Id.Equals(cardId));
 
             if (card == null)
             {
@@ -67,12 +72,12 @@ namespace Plonks.Cards.Services
                 return new CardResponse<CardDTO>() { Message = "Card was not found." };
             }
 
-            if(model.Title != null)
+            if (model.Title != null)
             {
                 card.Title = model.Title;
             }
 
-            if(model.Description != null)
+            if (model.Description != null)
             {
                 card.Description = model.Description;
             }
@@ -92,7 +97,7 @@ namespace Plonks.Cards.Services
             {
                 int newOrder = -1;
 
-                if(card.ListId == model.DepartureListId)
+                if (card.ListId == model.DepartureListId)
                 {
                     newOrder = model.DepartureChildren.Find((c) => c.Id == card.Id).Order;
                 }

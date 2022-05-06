@@ -25,6 +25,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IListService, ListService>();
 builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<IChecklistService, ChecklistService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Adding Authentication

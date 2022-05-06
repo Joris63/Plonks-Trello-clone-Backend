@@ -20,11 +20,11 @@ namespace Plonks.Shared.Entities
 
         public bool HasDescription { get; set; } = false;
 
-        public int CommentAmount { get; set; } = -1;
+        public int? CommentAmount { get; set; } = -1;
 
-        public int ChecklistItems { get; set; } = -1;
+        public int? ChecklistItems { get; set; } = -1;
 
-        public int CompletedChecklistItems { get; set; } = -1;
+        public int? CompletedChecklistItems { get; set; } = -1;
 
         public DateTime? CreatedAt { get; set; }
 
