@@ -23,7 +23,9 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: build
+        containerRegistry: 'Docker hub'
+        repository: 'plonks'
+        command: 'buildAndPush'
         dockerfile: '$(Build.SourcesDirectory)/Plonks.Auth/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
