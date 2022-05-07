@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Auth", "Plonks.Authentication\Plonks.Auth.csproj", "{ADE0F356-4B4B-4480-B042-CE4F674B2718}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Boards", "Plonks.Boards\Plonks.Boards.csproj", "{036A2B68-CD83-487A-BE87-B5293F6EBC2D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Shared", "Plonks.Shared\Plonks.Shared.csproj", "{DDB26766-35B7-444C-A75E-FE9FD007E586}"
@@ -13,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.APIGateway", "Plonks
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Lists", "Plonks.Lists\Plonks.Lists.csproj", "{AF79625E-14B2-4FCC-96C3-CC81BBF549DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plonks.Cards", "Plonks.Cards\Plonks.Cards.csproj", "{F7AF95B8-6566-4F70-B1DF-E5031A3FF635}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Cards", "Plonks.Cards\Plonks.Cards.csproj", "{F7AF95B8-6566-4F70-B1DF-E5031A3FF635}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Auth", "Plonks.Auth\Plonks.Auth.csproj", "{E382CB0A-3F3A-46F2-945E-F38788EE9787}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ADE0F356-4B4B-4480-B042-CE4F674B2718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADE0F356-4B4B-4480-B042-CE4F674B2718}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADE0F356-4B4B-4480-B042-CE4F674B2718}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADE0F356-4B4B-4480-B042-CE4F674B2718}.Release|Any CPU.Build.0 = Release|Any CPU
 		{036A2B68-CD83-487A-BE87-B5293F6EBC2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{036A2B68-CD83-487A-BE87-B5293F6EBC2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{036A2B68-CD83-487A-BE87-B5293F6EBC2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{F7AF95B8-6566-4F70-B1DF-E5031A3FF635}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7AF95B8-6566-4F70-B1DF-E5031A3FF635}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7AF95B8-6566-4F70-B1DF-E5031A3FF635}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E382CB0A-3F3A-46F2-945E-F38788EE9787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E382CB0A-3F3A-46F2-945E-F38788EE9787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E382CB0A-3F3A-46F2-945E-F38788EE9787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E382CB0A-3F3A-46F2-945E-F38788EE9787}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
