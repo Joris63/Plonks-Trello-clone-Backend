@@ -24,7 +24,7 @@ stages:
       displayName: Build an image
       inputs:
         containerRegistry: 'Docker hub'
-        repository: 'plonks'
+        repository: 'jorisk63/plonks'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/Plonks.Cards/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
