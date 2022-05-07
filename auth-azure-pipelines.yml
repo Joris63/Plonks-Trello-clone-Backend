@@ -24,6 +24,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/Plonks.Authentication/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/Plonks.Auth/Dockerfile'
         tags: |
           $(tag)
