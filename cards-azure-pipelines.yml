@@ -23,8 +23,10 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Plonks.Cards/Dockerfile'
+        containerRegistry: 'Docker hub'
+        repository: 'plonks'
+        command: 'buildAndPush'
+        Dockerfile: '$(Build.SourcesDirectory)/Plonks.Cards/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
           $(tag)
