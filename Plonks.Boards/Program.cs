@@ -15,6 +15,16 @@ Log.Information("Starting Plonks.Boards Microservice");
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    config.Sources.Clear();
+
+    var env = hostingContext.HostingEnvironment;
+
+    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+});
+
 builder.Host.UseSerilog((ctx, logConfig) =>
 {
     logConfig.WriteTo.Console()
