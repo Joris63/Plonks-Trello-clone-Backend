@@ -8,7 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Plonks.Shared/Plonks.Shared.csproj", "Plonks.Shared.csproj"]
-COPY ["Plonks.Cards/Plonks.Cards.csproj", "Plonks.Cards/"]
+COPY ["Plonks.Cards/Plonks.Cards.csproj", "Plonks.Cards/Plonks.Cards.csproj"]
 RUN dotnet restore "Plonks.Cards/Plonks.Cards.csproj"
 COPY . .
 WORKDIR "/src/Plonks.Cards"
