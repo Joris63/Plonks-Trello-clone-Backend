@@ -20,6 +20,14 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'Sonar.Plonks.Auth'
+        organization: '409968'
+        scannerMode: 'MSBuild'
+        projectKey: 'plonks-auth'
+        projectName: 'Plonks Auth'
+    - task: SonarCloudAnalyze@1
     - task: DotNetCoreCLI@2
       inputs:
         command: 'test'
