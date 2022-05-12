@@ -25,7 +25,6 @@ stages:
         command: 'test'
         projects: '**/Plonks.Auth.Test/*.csproj'
         arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-    - script: dotnet test <test-project> --logger trx --collect "Code coverage"
     - task: PublishTestResults@2
       inputs:
         testRunner: VSTest
