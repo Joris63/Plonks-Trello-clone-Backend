@@ -20,16 +20,27 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    
-    - task: VSTest@2
+    - task: SonarCloudPrepare@1
       inputs:
-        testSelector: 'testAssemblies'
-        testAssemblyVer2: |
-          **\*test*.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-        searchFolder: '$(System.DefaultWorkingDirectory)'
-        codeCoverageEnabled: true
+        SonarCloud: 'Sonar.Plonks.Auth'
+        organization: '409968'
+        scannerMode: 'MSBuild'
+        projectKey: '409968_Plonks'
+        projectName: 'Plonks'
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/Plonks.Auth.Test/*.csproj'
+    - task: SonarCloudAnalyze@1
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'test'
+        projects: '**/Plonks.Auth.Test/*.csproj'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
     - task: Docker@2
       displayName: Build an image
       inputs:
