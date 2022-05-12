@@ -23,7 +23,13 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'test'
-        projects: '$(Build.SourcesDirectory)/Plonks.Auth.Test/'
+        projects: '**/Plonks.Auth.Test/*.csproj'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    - script: dotnet test <test-project> --logger trx --collect "Code coverage"
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
     - task: Docker@2
       displayName: Build an image
       inputs:
