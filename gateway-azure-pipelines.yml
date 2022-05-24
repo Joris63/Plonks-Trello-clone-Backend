@@ -29,4 +29,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Plonks.APIGateway/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
-          Plonks.APIGateway-$(tag)
+          Plonks.APIGateway
