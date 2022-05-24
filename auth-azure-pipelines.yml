@@ -55,4 +55,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Plonks.Auth/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
-          $(tag)
+          Plonks.Auth-$(tag)
