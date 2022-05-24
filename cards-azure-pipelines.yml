@@ -29,4 +29,4 @@ stages:
         Dockerfile: '$(Build.SourcesDirectory)/Plonks.Cards/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
-          $(tag)
+          Plonks.Cards-$(tag)
