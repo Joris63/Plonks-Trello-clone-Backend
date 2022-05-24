@@ -29,4 +29,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Plonks.Lists/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
-          $(tag)
+          Plonks.Lists-$(tag)
