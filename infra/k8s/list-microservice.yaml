@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: plonks-lists
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+  selector:
+    app: plonks-lists
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plonks-lists
+spec:
+  selector:
+    matchLabels:
+      app: plonks-lists
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: plonks-lists
+    spec:
+      containers:
+      - name: plonks-lists
+        image: jorisk63/plonks:plonks.lists
+        ports:
+        - containerPort: 80

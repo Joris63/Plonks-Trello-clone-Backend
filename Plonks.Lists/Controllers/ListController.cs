@@ -12,12 +12,12 @@ namespace Plonks.Lists.Controllers
     public class ListController : ControllerBase
     {
         private readonly IListService _service;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IBus _bus;
 
-        public ListController(IListService service, IPublishEndpoint publishEndpoint)
+        public ListController(IListService service, IBus bus)
         {
             _service = service;
-            this.publishEndpoint = publishEndpoint;
+            _bus = bus;
         }
 
         [Authorize]
@@ -34,7 +34,7 @@ namespace Plonks.Lists.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedBoardList>>(new QueueMessage<SharedBoardList>
+                await _bus.Publish(new QueueMessage<SharedBoardList>
                 {
                     Data = new SharedBoardList { Id = response.Data.Id, Title = response.Data.Title },
                     Type = QueueMessageType.Insert
@@ -85,7 +85,7 @@ namespace Plonks.Lists.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedBoardList>>(new QueueMessage<SharedBoardList>
+                await _bus.Publish(new QueueMessage<SharedBoardList>
                 {
                     Data = new SharedBoardList { Id = response.Data.Id, Title = response.Data.Title },
                     Type = QueueMessageType.Update

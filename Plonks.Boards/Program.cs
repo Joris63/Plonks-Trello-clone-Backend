@@ -15,16 +15,6 @@ Log.Information("Starting Plonks.Boards Microservice");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    config.Sources.Clear();
-
-    var env = hostingContext.HostingEnvironment;
-
-    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-});
-
 builder.Host.UseSerilog((ctx, logConfig) =>
 {
     logConfig.WriteTo.Console()
@@ -37,7 +27,7 @@ builder.Host.UseSerilog((ctx, logConfig) =>
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("LocalDB")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));
 
 builder.Services.AddCors(options =>
 {
@@ -80,19 +70,21 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddMassTransit(config =>
+builder.Services.AddMassTransit(x =>
 {
-    config.AddConsumer<UserConsumer>();
+    x.AddConsumer<UserConsumer>();
 
-    config.UsingRabbitMq((ctx, cfg) =>
+    x.AddBus(provider => Bus.Factory.CreateUsingAzureServiceBus(config =>
     {
-        cfg.Host("amqp://guest:guest@localhost:5672");
+        config.Host(configuration.GetConnectionString("ServiceBus"));
 
-        cfg.ReceiveEndpoint("board.user", c =>
+        config.ReceiveEndpoint("board.user", ep =>
         {
-            c.ConfigureConsumer<UserConsumer>(ctx);
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 100));
+            ep.ConfigureConsumer<UserConsumer>(provider);
         });
-    });
+    }));
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

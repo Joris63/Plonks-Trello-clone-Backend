@@ -12,12 +12,12 @@ namespace Plonks.Cards.Controllers
     public class ChecklistController : ControllerBase
     {
         private readonly IChecklistService _service;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IBus _bus;
 
-        public ChecklistController(IChecklistService service, IPublishEndpoint publishEndpoint)
+        public ChecklistController(IChecklistService service, IBus bus)
         {
             _service = service;
-            this.publishEndpoint = publishEndpoint;
+            _bus = bus;
         }
 
         [Authorize]
@@ -34,7 +34,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {
@@ -68,7 +68,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {
@@ -147,7 +147,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {
@@ -204,7 +204,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {
@@ -238,7 +238,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {

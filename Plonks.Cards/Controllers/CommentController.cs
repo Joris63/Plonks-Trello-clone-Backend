@@ -12,12 +12,12 @@ namespace Plonks.Cards.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _service;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IBus _bus;
 
-        public CommentController(ICommentService service, IPublishEndpoint publishEndpoint)
+        public CommentController(ICommentService service, IBus bus)
         {
             _service = service;
-            this.publishEndpoint = publishEndpoint;
+            _bus = bus;
         }
 
         [Authorize]
@@ -34,7 +34,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {
@@ -90,7 +90,7 @@ namespace Plonks.Cards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedCard>>(new QueueMessage<SharedCard>()
+                await _bus.Publish(new QueueMessage<SharedCard>()
                 {
                     Data = new SharedCard()
                     {

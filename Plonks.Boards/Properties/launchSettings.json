@@ -9,22 +9,12 @@
     }
   },
   "profiles": {
-    "Plonks.Boards(dev)": {
+    "Plonks.Boards": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5021;http://localhost:5020",
-      "dotnetRunMessages": true
-    },
-    "Plonks.Boards(prod)": {
-      "commandName": "Project",
-      "launchBrowser": false,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "https://localhost:5021;http://localhost:5020",
       "dotnetRunMessages": true

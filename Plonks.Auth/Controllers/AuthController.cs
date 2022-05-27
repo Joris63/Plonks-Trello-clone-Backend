@@ -13,12 +13,12 @@ namespace Plonks.Auth.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _service;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IBus _bus;
 
-        public AuthController(IAuthService service, IPublishEndpoint publishEndpoint)
+        public AuthController(IAuthService service, IBus bus)
         {
             _service = service;
-            this.publishEndpoint = publishEndpoint;
+            _bus = bus;
         }
 
         [HttpPost]
@@ -34,7 +34,7 @@ namespace Plonks.Auth.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedUser>>(new QueueMessage<SharedUser>
+                await _bus.Publish(new QueueMessage<SharedUser>
                 {
                     Data = new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath },
                     Type = QueueMessageType.Insert
@@ -90,7 +90,7 @@ namespace Plonks.Auth.Controllers
 
                 if (response.Message == "registered")
                 {
-                    await publishEndpoint.Publish<QueueMessage<SharedUser>>(new QueueMessage<SharedUser>
+                    await _bus.Publish(new QueueMessage<SharedUser>
                     {
                         Data = new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath },
                         Type = QueueMessageType.Insert

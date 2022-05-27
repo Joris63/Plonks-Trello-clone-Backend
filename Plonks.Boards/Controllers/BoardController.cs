@@ -14,13 +14,13 @@ namespace Plonks.Boards.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IBoardService _service;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IBus _bus;
         private readonly ILogger<BoardController> _logger;
 
-        public BoardController(IBoardService service, IPublishEndpoint publishEndpoint, ILogger<BoardController> logger)
+        public BoardController(IBoardService service, IBus bus, ILogger<BoardController> logger)
         {
             _service = service;
-            this.publishEndpoint = publishEndpoint;
+            _bus = bus;
             _logger = logger;
         }
 
@@ -40,7 +40,7 @@ namespace Plonks.Boards.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedBoard>>(new QueueMessage<SharedBoard>
+                await _bus.Publish(new QueueMessage<SharedBoard>
                 {
                     Data = new SharedBoard { Id = response.Data },
                     Type = QueueMessageType.Insert

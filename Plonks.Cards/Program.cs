@@ -9,18 +9,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    config.Sources.Clear();
-
-    var env = hostingContext.HostingEnvironment;
-
-    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-    config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-});
-
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("LocalDB")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));
 
 builder.Services.AddCors(options =>
 {
@@ -66,25 +56,29 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddMassTransit(config =>
+builder.Services.AddMassTransit(x =>
 {
-    config.AddConsumer<UserConsumer>();
-    config.AddConsumer<ListConsumer>();
+    x.AddConsumer<UserConsumer>();
+    x.AddConsumer<ListConsumer>();
 
-    config.UsingRabbitMq((ctx, cfg) =>
+    x.AddBus(provider => Bus.Factory.CreateUsingAzureServiceBus(config =>
     {
-        cfg.Host("amqp://guest:guest@localhost:5672");
+        config.Host(configuration.GetConnectionString("ServiceBus"));
 
-        cfg.ReceiveEndpoint("card.user", c =>
+        config.ReceiveEndpoint("card.user", ep =>
         {
-            c.ConfigureConsumer<UserConsumer>(ctx);
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 100));
+            ep.ConfigureConsumer<UserConsumer>(provider);
         });
 
-        cfg.ReceiveEndpoint("card.list", c =>
+        config.ReceiveEndpoint("card.list", ep =>
         {
-            c.ConfigureConsumer<ListConsumer>(ctx);
+            ep.PrefetchCount = 16;
+            ep.UseMessageRetry(r => r.Interval(2, 100));
+            ep.ConfigureConsumer<ListConsumer>(provider);
         });
-    });
+    }));
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

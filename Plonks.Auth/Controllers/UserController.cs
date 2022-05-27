@@ -12,12 +12,12 @@ namespace Plonks.Auth.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IBus _bus;
 
-        public UserController(IUserService service, IPublishEndpoint publishEndpoint)
+        public UserController(IUserService service, IBus bus)
         {
             _service = service;
-            this.publishEndpoint = publishEndpoint;
+            _bus = bus;
         }
 
         [Authorize]
@@ -34,7 +34,7 @@ namespace Plonks.Auth.Controllers
                     return BadRequest(response.Message);
                 }
 
-                await publishEndpoint.Publish<QueueMessage<SharedUser>>(new QueueMessage<SharedUser>
+                await _bus.Publish(new QueueMessage<SharedUser>
                 {
                     Data = new SharedUser { Id = response.Id, Username = response.Username, Email = response.Email, PicturePath = response.PicturePath },
                     Type = QueueMessageType.Update
