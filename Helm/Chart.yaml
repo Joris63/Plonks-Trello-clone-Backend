@@ -1,6 +1,6 @@
 apiVersion: v2
 name: plonks-app
-description: A Helm chart for Kubernetes
+description: Kubernetes Helm Chart for Plonks
 
 # A chart can be either an 'application' or a 'library' chart.
 #

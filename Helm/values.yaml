@@ -1,8 +1,15 @@
 replicaCount: 1
 
+hosts:
+  frontend: plonks.nl
+  gateway: api.plonks.nl
+
 frontend:
   name: frontend
   image: jorisk63/plonks:plonks
+
+letsencrypt:
+  email: joris.kamminga@gmail.com
 
 microservices:
   - name: auth
