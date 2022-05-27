@@ -1,0 +1,21 @@
+replicaCount: 1
+
+frontend:
+  name: frontend
+  image: jorisk63/plonks:plonks
+
+microservices:
+  - name: auth
+    image: jorisk63/plonks:plonks.auth
+
+  - name: boards
+    image: jorisk63/plonks:plonks.boards
+
+  - name: lists
+    image: jorisk63/plonks:plonks.lists
+
+  - name: cards
+    image: jorisk63/plonks:plonks.cards
+    
+  - name: gateway
+    image: jorisk63/plonks:plonks.gateway

@@ -1,0 +1,32 @@
+{{- $replicaCount := .Values.replicaCount -}}
+{{- range $index, $microservice := .Values.microservices}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plonks-{{ $microservice.name }}
+spec:
+  selector:
+    matchLabels:
+      app: plonks-{{ $microservice.name }}
+  replicas: {{ $replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: plonks-{{ $microservice.name }}
+    spec:
+      containers:
+      - name: plonks-{{ $microservice.name }}
+        image: {{ $microservice.image }}
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secrets
+          mountPath: app/appsettings.json
+          subPath: appsettings.json
+      volumes:
+      - name: secrets
+        secret:
+          secretName: {{ $microservice.name }}-appsettings
+          optional: false 
+# --- etc ---
+{{- end }}
