@@ -15,15 +15,6 @@ Log.Information("Starting Plonks.Boards Microservice");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, logConfig) =>
-{
-    logConfig.WriteTo.Console()
-        .ReadFrom.Configuration(ctx.Configuration)
-        .Enrich.WithEnvironmentName()
-        .Enrich.WithMachineName()
-        .Enrich.WithProperty("Version", 1);
-});
-
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
@@ -57,11 +48,6 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = configuration["Jwt:Issuer"],
-        ValidAudience = configuration["Jwt:Audience"],
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
