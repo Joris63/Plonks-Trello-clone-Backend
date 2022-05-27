@@ -19,8 +19,8 @@ spec:
   - host: {{ .Values.hosts.frontend }}
     http:
       paths:
-      - pathType: Prefix
-        path: /
+      - path: /
+        pathType: Prefix
         backend:
           service:
             name: plonks-{{ .Values.frontend.name }}
@@ -29,10 +29,12 @@ spec:
   - host: {{ .Values.hosts.gateway }}
     http:
       paths:
-        - pathType: Prefix
-          path: /
-          backend:
-            service:
-              name: plonks-gateway
-              port:
-                number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            {{- with index .Values.microservices 0 }}
+            name: plonks-{{ .name }}
+            {{- end }}
+            port:
+              number: 80

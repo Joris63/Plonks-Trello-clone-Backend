@@ -6,12 +6,15 @@ hosts:
 
 frontend:
   name: frontend
-  image: jorisk63/plonks:plonks
+  image: jorisk63/plonks:frontend
 
 letsencrypt:
   email: joris.kamminga@gmail.com
 
 microservices:
+  - name: gateway
+    image: jorisk63/plonks:plonks.gateway
+    
   - name: auth
     image: jorisk63/plonks:plonks.auth
 
@@ -23,6 +26,3 @@ microservices:
 
   - name: cards
     image: jorisk63/plonks:plonks.cards
-    
-  - name: gateway
-    image: jorisk63/plonks:plonks.gateway
