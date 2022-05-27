@@ -8,19 +8,11 @@
     }
   },
   "profiles": {
-    "Plonks.APIGateway(dev)": {
+    "Plonks.APIGateway": {
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true
-    },
-    "Plonks.APIGateway(prod)": {
-      "commandName": "Project",
-      "launchBrowser": false,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "dotnetRunMessages": true
     },
