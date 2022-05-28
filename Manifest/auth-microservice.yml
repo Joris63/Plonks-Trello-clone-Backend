@@ -32,7 +32,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: secrets
-          mountPath: app/appsettings.json
+          mountPath: /app/
           subPath: appsettings.json
       volumes:
       - name: secrets
