@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: plonks-auth
+  namespace: backend
 spec:
   ports:
     - port: 80
@@ -15,6 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: plonks-auth
+  namespace: backend
 spec:
   selector:
     matchLabels:
@@ -33,13 +35,18 @@ spec:
         env:
         - name: "ASPNETCORE_ENVIRONMENT"
           value: "Production"
-        - name: ""
-          value: ""
-        volumeMounts:
-        - name: secrets
-          mountPath: /app/
-          readOnly: true
-      volumes:
-      - name: secrets
-        secret:
-          secretName: auth-appsettings
+        - name: "PLONKS_ConnectionStrings__DB"
+          valueFrom:
+            secretKeyRef:
+              name: auth-database
+              key: ConnectionString
+        - name: "PLONKS_ConnectionStrings__ServiceBus"
+          valueFrom:
+            secretKeyRef:
+              name: azure-bus
+              key: ConnectionString
+        - name: "PLONKS_JWT__Secret"
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: Secret

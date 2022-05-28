@@ -12,7 +12,7 @@ ConfigurationManager configuration = builder.Configuration;
 configuration.AddEnvironmentVariables("PLONKS_");
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration["ConnectionStrings:DB"]));
 
 builder.Services.AddCors(options =>
 {
@@ -54,7 +54,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddBus(provider => Bus.Factory.CreateUsingAzureServiceBus(config =>
     {
-        config.Host(configuration.GetConnectionString("ServiceBus"));
+        config.Host(configuration["ConnectionStrings:ServiceBus"]);
     }));
 });
 
