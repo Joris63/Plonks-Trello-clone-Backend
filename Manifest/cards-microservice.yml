@@ -30,6 +30,9 @@ spec:
         image: jorisk63/plonks:plonks.cards
         ports:
         - containerPort: 80
+        env:
+        - name: "ASPNETCORE_ENVIRONMENT"
+          value: "Production"
         volumeMounts:
         - name: secrets
           mountPath: app/appsettings.json
