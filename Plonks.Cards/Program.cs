@@ -9,14 +9,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    config.Sources.Clear();
-
-    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-    config.AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true);
-    config.AddEnvironmentVariables("PLONKS_");
-});
+configuration.AddEnvironmentVariables("PLONKS_");
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));

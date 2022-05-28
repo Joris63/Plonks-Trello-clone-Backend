@@ -17,14 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    config.Sources.Clear();
+configuration.AddEnvironmentVariables("PLONKS_");
 
-    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-    config.AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true);
-    config.AddEnvironmentVariables("PLONKS_");
-});
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));
 

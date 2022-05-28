@@ -33,12 +33,13 @@ spec:
         env:
         - name: "ASPNETCORE_ENVIRONMENT"
           value: "Production"
+        - name: ""
+          value: ""
         volumeMounts:
         - name: secrets
-          mountPath: /app
-          subPath: appsettings.secrets.json
+          mountPath: /app/
+          readOnly: true
       volumes:
       - name: secrets
         secret:
           secretName: auth-appsettings
-          optional: false 
