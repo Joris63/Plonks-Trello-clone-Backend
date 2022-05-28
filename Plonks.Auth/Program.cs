@@ -12,7 +12,7 @@ ConfigurationManager configuration = builder.Configuration;
 configuration.AddEnvironmentVariables("PLONKS_");
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration["ConnectionStrings:DB"]));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("PLONKS_ConnectionStrings__DB") ?? configuration.GetConnectionString("DB")));
 
 builder.Services.AddCors(options =>
 {
@@ -44,7 +44,7 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("PLONKS_JWT__Secret") ?? configuration["JWT:Secret"]))
     };
 });
 
@@ -54,7 +54,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddBus(provider => Bus.Factory.CreateUsingAzureServiceBus(config =>
     {
-        config.Host(configuration["ConnectionStrings:ServiceBus"]);
+        config.Host(Environment.GetEnvironmentVariable("PLONKS_ConnectionStrings__ServiceBus") ?? configuration.GetConnectionString("ServiceBus"));
     }));
 });
 
