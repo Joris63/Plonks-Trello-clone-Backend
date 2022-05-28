@@ -4,12 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Plonks.Auth.Helpers;
 using Plonks.Auth.Services;
+using System.Collections;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-configuration.AddEnvironmentVariables("PLONKS_");
+configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables("PLONKS_");
+
+foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+    Console.WriteLine("  {0} = {1}", de.Key, de.Value);
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("PLONKS_ConnectionStrings__DB") ?? configuration.GetConnectionString("DB")));
