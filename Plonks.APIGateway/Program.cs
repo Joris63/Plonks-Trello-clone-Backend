@@ -1,4 +1,3 @@
-using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 IConfiguration configuration = new ConfigurationBuilder()
@@ -18,13 +17,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddOcelot(configuration);
+
+var ocelotConfig = builder.Environment.IsDevelopment() ? "ocelot.Development.json" : "ocelot.json";
+builder.Configuration.AddJsonFile(ocelotConfig);
 
 var app = builder.Build();
 
 
 app.UseCors("cors");
 
-app.UseOcelot();
+app.UseOcelot().Wait();
 
 app.Run();

@@ -2,80 +2,83 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/auth/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-auth.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5011
         }
       ],
       "UpstreamPathTemplate": "/api/auth/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/user/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-auth.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5011
         }
       ],
       "UpstreamPathTemplate": "/api/user/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/board/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-boards.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5021
         }
       ],
       "UpstreamPathTemplate": "/api/board/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/list/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-lists.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5031
         }
       ],
       "UpstreamPathTemplate": "/api/list/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/card/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-lists.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5041
         }
       ],
       "UpstreamPathTemplate": "/api/card/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/checklist/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-cards.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5041
         }
       ],
       "UpstreamPathTemplate": "/api/checklist/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/comment/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "plonks-cards.default.svc.cluster.local",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 5041
         }
       ],
       "UpstreamPathTemplate": "/api/comment/{everything}"
     }
   ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5001"
+  }
 }
