@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 
-configuration.AddEnvironmentVariables("PLONKS_");
+configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));
