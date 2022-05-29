@@ -4,19 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Plonks.Auth.Helpers;
 using Plonks.Auth.Services;
-using System.Collections;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables("PLONKS_");
-
-foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
-    Console.WriteLine("  {0} = {1}", de.Key, de.Value);
+configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables();
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Environment.GetEnvironmentVariable("PLONKS_ConnectionStrings__DB") ?? configuration.GetConnectionString("DB")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DB")));
 
 builder.Services.AddCors(options =>
 {
@@ -48,7 +44,7 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("PLONKS_JWT__Secret") ?? configuration["JWT:Secret"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
     };
 });
 
@@ -58,7 +54,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddBus(provider => Bus.Factory.CreateUsingAzureServiceBus(config =>
     {
-        config.Host(Environment.GetEnvironmentVariable("PLONKS_ConnectionStrings__ServiceBus") ?? configuration.GetConnectionString("ServiceBus"));
+        config.Host(configuration.GetConnectionString("ServiceBus"));
     }));
 });
 
