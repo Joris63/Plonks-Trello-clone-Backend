@@ -30,3 +30,6 @@ spec:
         image: jorisk63/plonks:plonks.gateway
         ports:
         - containerPort: 80
+        env:
+        - name: "ASPNETCORE_ENVIRONMENT"
+          value: "Production"
