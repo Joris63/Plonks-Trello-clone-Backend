@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Plonks.APIGateway/Plonks.Gateway.csproj", "Plonks.Gateway/Plonks.Gateway.csproj"]
+COPY ["Plonks.Gateway/Plonks.Gateway.csproj", "Plonks.Gateway/Plonks.Gateway.csproj"]
 RUN dotnet restore "Plonks.Gateway/Plonks.Gateway.csproj"
 COPY . .
 WORKDIR "/src/Plonks.Gateway"
