@@ -34,4 +34,4 @@ spec:
         - name: "ASPNETCORE_ENVIRONMENT"
           value: "Production"
         - name: "ASPNETCORE_URLS"
-          value: "http://*:80"
+          value: "https://+:80"
