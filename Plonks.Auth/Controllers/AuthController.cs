@@ -8,8 +8,8 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Auth.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _service;

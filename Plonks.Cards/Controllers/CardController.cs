@@ -8,8 +8,8 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Cards.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class CardController : ControllerBase
     {
         private readonly ICardService _service;
