@@ -37,6 +37,13 @@ spec:
             name: plonks-auth
             port:
               number: 80
+      - path: /user
+        pathType: Prefix
+        backend:
+          service:
+            name: plonks-auth
+            port:
+              number: 80
       - path: /board
         pathType: Prefix
         backend:
@@ -52,6 +59,20 @@ spec:
             port:
               number: 80
       - path: /card
+        pathType: Prefix
+        backend:
+          service:
+            name: plonks-cards
+            port:
+              number: 80
+      - path: /checklist
+        pathType: Prefix
+        backend:
+          service:
+            name: plonks-cards
+            port:
+              number: 80
+      - path: /comment
         pathType: Prefix
         backend:
           service:

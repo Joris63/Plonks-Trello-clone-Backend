@@ -7,7 +7,7 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Auth.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {

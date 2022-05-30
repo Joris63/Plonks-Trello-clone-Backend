@@ -9,7 +9,7 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Boards.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class BoardController : ControllerBase
     {

@@ -7,7 +7,7 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Cards.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ChecklistController : ControllerBase
     {
