@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Plonks.APIGateway/Plonks.APIGateway.csproj", "Plonks.APIGateway/Plonks.APIGateway.csproj"]
-RUN dotnet restore "Plonks.APIGateway/Plonks.APIGateway.csproj"
+COPY ["Plonks.APIGateway/Plonks.Gateway.csproj", "Plonks.Gateway/Plonks.Gateway.csproj"]
+RUN dotnet restore "Plonks.Gateway/Plonks.Gateway.csproj"
 COPY . .
-WORKDIR "/src/Plonks.APIGateway"
-RUN dotnet build "Plonks.APIGateway.csproj" -c Release -o /app/build
+WORKDIR "/src/Plonks.Gateway"
+RUN dotnet build "Plonks.Gateway.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Plonks.APIGateway.csproj" -c Release -o /app/publish
+RUN dotnet publish "Plonks.Gateway.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Plonks.APIGateway.dll"]
+ENTRYPOINT ["dotnet", "Plonks.Gateway.dll"]
