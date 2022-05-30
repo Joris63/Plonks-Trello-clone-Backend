@@ -78,4 +78,7 @@
       "UpstreamPathTemplate": "/api/comment/{everything}"
     }
   ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://api.plonks.nl"
+  }
 }
