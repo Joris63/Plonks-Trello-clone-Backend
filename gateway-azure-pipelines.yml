@@ -26,7 +26,7 @@ stages:
         containerRegistry: 'Docker hub'
         repository: 'jorisk63/plonks'
         command: 'buildAndPush'
-        dockerfile: '$(Build.SourcesDirectory)/Plonks.APIGateway/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/Plonks.Gateway/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
           plonks.gateway
