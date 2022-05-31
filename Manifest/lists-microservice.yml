@@ -49,3 +49,7 @@ spec:
             secretKeyRef:
               name: jwt-secret
               key: Secret
+        - name: "JWT__Issuer"
+          value: "https://api.plonks.nl"
+        - name: "JWT__Audience"
+          value: "https://plonks.nl"

@@ -28,5 +28,6 @@ spec:
       containers:
       - name: plonks-frontend
         image: jorisk63/plonks:frontend
+        imagePullPolicy: Always
         ports:
         - containerPort: 80

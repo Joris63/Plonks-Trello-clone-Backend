@@ -158,6 +158,9 @@ namespace Plonks.Auth.Services
 
         private string CreateAccessToken(User user)
         {
+            string myIssuer = _config["JWT:Issuer"];
+            string myAudience = _config["JWT:Audience"];
+
             List<Claim> authClaims = new List<Claim>
             {
                 new Claim("id", user.Id.ToString()),
@@ -166,11 +169,15 @@ namespace Plonks.Auth.Services
                 new Claim("picturePath", user.PicturePath != null ? user.PicturePath : ""),
                 new Claim("socialLogin", user.SocialAccount.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Aud, myIssuer),
+                new Claim(JwtRegisteredClaimNames.Iss, myAudience)
             };
 
             SymmetricSecurityKey authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
 
             JwtSecurityToken token = new JwtSecurityToken(
+                issuer: myIssuer,
+                audience: myAudience,
                 expires: DateTime.Now.AddMinutes(15),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
