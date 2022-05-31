@@ -9,8 +9,8 @@ using Plonks.Shared.Entities;
 
 namespace Plonks.Boards.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class BoardController : ControllerBase
     {
         private readonly IBoardService _service;

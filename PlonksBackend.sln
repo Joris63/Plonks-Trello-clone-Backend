@@ -7,15 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Boards", "Plonks.Boa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Shared", "Plonks.Shared\Plonks.Shared.csproj", "{DDB26766-35B7-444C-A75E-FE9FD007E586}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.APIGateway", "Plonks.APIGateway\Plonks.APIGateway.csproj", "{1446BE19-6BBE-41F6-84C5-084C8174339E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Lists", "Plonks.Lists\Plonks.Lists.csproj", "{AF79625E-14B2-4FCC-96C3-CC81BBF549DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Cards", "Plonks.Cards\Plonks.Cards.csproj", "{F7AF95B8-6566-4F70-B1DF-E5031A3FF635}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Auth", "Plonks.Auth\Plonks.Auth.csproj", "{E382CB0A-3F3A-46F2-945E-F38788EE9787}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plonks.Auth.Test", "Plonks.Auth.Test\Plonks.Auth.Test.csproj", "{92296D91-D487-499C-8AD6-81C482AEA02B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plonks.Auth.Test", "Plonks.Auth.Test\Plonks.Auth.Test.csproj", "{92296D91-D487-499C-8AD6-81C482AEA02B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plonks.Gateway", "Plonks.Gateway\Plonks.Gateway.csproj", "{EF13CE0C-AB5D-47F4-B2A8-6CB282AAD08F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,6 @@ Global
 		{DDB26766-35B7-444C-A75E-FE9FD007E586}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDB26766-35B7-444C-A75E-FE9FD007E586}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDB26766-35B7-444C-A75E-FE9FD007E586}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1446BE19-6BBE-41F6-84C5-084C8174339E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1446BE19-6BBE-41F6-84C5-084C8174339E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1446BE19-6BBE-41F6-84C5-084C8174339E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1446BE19-6BBE-41F6-84C5-084C8174339E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF79625E-14B2-4FCC-96C3-CC81BBF549DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF79625E-14B2-4FCC-96C3-CC81BBF549DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF79625E-14B2-4FCC-96C3-CC81BBF549DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{92296D91-D487-499C-8AD6-81C482AEA02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92296D91-D487-499C-8AD6-81C482AEA02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92296D91-D487-499C-8AD6-81C482AEA02B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF13CE0C-AB5D-47F4-B2A8-6CB282AAD08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF13CE0C-AB5D-47F4-B2A8-6CB282AAD08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF13CE0C-AB5D-47F4-B2A8-6CB282AAD08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF13CE0C-AB5D-47F4-B2A8-6CB282AAD08F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
