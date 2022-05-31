@@ -28,6 +28,7 @@ spec:
       containers:
       - name: plonks-gateway
         image: jorisk63/plonks:plonks.gateway
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:

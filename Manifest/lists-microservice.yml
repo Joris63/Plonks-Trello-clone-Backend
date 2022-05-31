@@ -28,6 +28,7 @@ spec:
       containers:
       - name: plonks-lists
         image: jorisk63/plonks:plonks.lists
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
