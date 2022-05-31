@@ -31,8 +31,3 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-        env:
-        - name: "ASPNETCORE_ENVIRONMENT"
-          value: "Production"
-        - name: "ASPNETCORE_URLS"
-          value: "https://+:80"

@@ -8,7 +8,7 @@ using Plonks.Shared.Entities;
 namespace Plonks.Cards.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ChecklistController : ControllerBase
     {
         private readonly IChecklistService _service;

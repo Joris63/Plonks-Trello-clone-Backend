@@ -9,7 +9,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/auth/{everything}"
+      "UpstreamPathTemplate": "/auth/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/user/{everything}",
@@ -20,7 +20,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/user/{everything}"
+      "UpstreamPathTemplate": "/user/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/board/{everything}",
@@ -31,7 +31,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/board/{everything}"
+      "UpstreamPathTemplate": "/board/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/list/{everything}",
@@ -42,7 +42,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/list/{everything}"
+      "UpstreamPathTemplate": "/list/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/card/{everything}",
@@ -53,7 +53,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/card/{everything}"
+      "UpstreamPathTemplate": "/card/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/checklist/{everything}",
@@ -64,7 +64,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/checklist/{everything}"
+      "UpstreamPathTemplate": "/checklist/{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/comment/{everything}",
@@ -75,7 +75,7 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/comment/{everything}"
+      "UpstreamPathTemplate": "/comment/{everything}"
     }
   ],
   "GlobalConfiguration": {

@@ -8,7 +8,7 @@ using Plonks.Shared.Entities;
 namespace Plonks.Lists.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ListController : ControllerBase
     {
         private readonly IListService _service;

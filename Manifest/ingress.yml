@@ -36,4 +36,4 @@ spec:
           service:
             name: plonks-gateway
             port:
-              number: 5000
+              number: 80
