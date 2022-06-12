@@ -1,0 +1,14 @@
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: plonks-boards-hpa
+  namespace: default
+spec:
+  maxReplicas: 20
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: plonks-boards
+  targetCPUUtilizationPercentage: 80

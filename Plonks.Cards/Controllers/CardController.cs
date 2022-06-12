@@ -9,7 +9,7 @@ using Plonks.Shared.Entities;
 namespace Plonks.Cards.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class CardController : ControllerBase
     {
         private readonly ICardService _service;

@@ -30,10 +30,31 @@ spec:
   - host: api.plonks.nl
     http:
       paths:
-      - path: /
+      - path: /auth
         pathType: Prefix
         backend:
           service:
-            name: plonks-gateway
+            name: plonks-auth
+            port:
+              number: 80
+      - path: /board
+        pathType: Prefix
+        backend:
+          service:
+            name: plonks-boards
+            port:
+              number: 80
+      - path: /list
+        pathType: Prefix
+        backend:
+          service:
+            name: plonks-lists
+            port:
+              number: 80
+      - path: /card
+        pathType: Prefix
+        backend:
+          service:
+            name: plonks-cards
             port:
               number: 80
